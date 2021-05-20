@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="default_background">@color/pure_black</color>
+    <color name="default_text">@color/pure_white</color>
+    <color name="secondary_text">@color/pure_black</color>
+</resources>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_error">Произошла ошибка!\nПожалуйста,попробуйте позже</string>
+    <string name="retry">Повторить</string>
+</resources>

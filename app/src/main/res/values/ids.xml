@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="view_type_music_feed_title" type="id" />
+    <item name="view_type_music_feed_pager" type="id" />
+    <item name="view_type_music_feed_playlists" type="id" />
+    <item name="view_type_music_feed_charts" type="id" />
+    <item name="view_type_music_feed_cds" type="id" />
+</resources>
