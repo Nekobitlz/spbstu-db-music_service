@@ -1,6 +1,7 @@
 package ru.spbstu.musicservice.ui.feed.adapter
 
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import ru.spbstu.commons.adapter.BaseAdapterItem
@@ -36,5 +37,8 @@ class TitleMusicFeedViewHolder(
     fun bind(@StringRes titleRes: Int) {
         val resources = itemView.resources
         tvTitle.text = resources.getString(titleRes)
+        itemView.setOnClickListener {
+            Toast.makeText(itemView.context, "Click more", Toast.LENGTH_SHORT).show()
+        }
     }
 }

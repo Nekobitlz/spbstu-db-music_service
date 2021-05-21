@@ -1,6 +1,5 @@
 package ru.spbstu.musicservice.ui.feed
 
-import android.app.Application
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -36,7 +35,7 @@ class MusicFeedViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val list = mutableListOf<BaseAdapterItem<out RecyclerView.ViewHolder>>()
-                databaseRepository.getCd(10)
+                databaseRepository.getCds(10)
                     .map {
                         BaseMusicFeedRecycleItem(
                             R.id.view_type_music_feed_cds,
@@ -47,6 +46,14 @@ class MusicFeedViewModel @Inject constructor(
                     }
                     .also {
                         list += TitleMusicFeedItem(R.string.best_cd)
+                        list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
+                    }
+                databaseRepository.getCharts(10)
+                    .map {
+                        BaseMusicFeedRecycleItem(R.id.view_type_music_feed_charts, it.id, it.name)
+                    }
+                    .also {
+                        list += TitleMusicFeedItem(R.string.best_charts)
                         list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
                     }
                 _items.postValue(list.toList() as List<BaseAdapterItem<RecyclerView.ViewHolder>>)
