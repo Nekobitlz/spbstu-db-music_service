@@ -33,10 +33,14 @@ class MusicFeedFragment : BaseRecyclerFragment() {
         recyclerBinding.emptyView.state = EmptyViewState.Loading
         recyclerBinding.list.gone()
 
-        viewModel.items.observe(viewLifecycleOwner, Observer {
+        viewModel.items.observe(viewLifecycleOwner, {
             recyclerBinding.emptyView.state = EmptyViewState.None
             recyclerBinding.list.visible()
             adapter.submitList(it)
         })
+    }
+
+    companion object {
+        const val PARAM_USER = "PARAM_USER"
     }
 }

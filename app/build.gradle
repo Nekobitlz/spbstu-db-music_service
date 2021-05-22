@@ -55,6 +55,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
 
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.4.6'
+    implementation 'com.afollestad.material-dialogs:core:3.3.0'
+
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 }

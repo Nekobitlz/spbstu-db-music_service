@@ -3,4 +3,11 @@
 
     <string name="best_cd">Популярные CD</string>
     <string name="best_charts">Чарты</string>
+
+    <string name="login">Номер телефона или адрес эл.почты</string>
+    <string name="password">Пароль</string>
+    <string name="enter">Войти</string>
+    <string name="music_service">Музыкальный\nсервис</string>
+    <string name="login_error">Неверный логин или пароль.</string>
+    <string name="ok">ОК</string>
 </resources>

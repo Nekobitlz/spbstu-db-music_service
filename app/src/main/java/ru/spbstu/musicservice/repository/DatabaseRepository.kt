@@ -1,7 +1,6 @@
 package ru.spbstu.musicservice.repository
 
-import ru.spbstu.musicservice.data.Cd
-import ru.spbstu.musicservice.data.Chart
+import ru.spbstu.musicservice.data.*
 import javax.inject.Inject
 
 class DatabaseRepository @Inject constructor(
@@ -44,5 +43,47 @@ class DatabaseRepository @Inject constructor(
             )
         }
         return result
+    }
+
+    fun getUser(login: String, password: String): User? {
+        var query = "SELECT * " +
+                "FROM db.users " +
+                "INNER JOIN db.gender ON users.gender_id = gender.id " +
+                "INNER JOIN db.subscription ON users.subscription_id = subscription.id " +
+                "INNER JOIN db.country ON users.country_id = country.id " +
+                "INNER JOIN db.user_type ON users.user_type_id = user_type.id " +
+                "WHERE password = '$password' AND "
+        query += (if (login.matches(Regex("[0-9]+"))) "phone_number = '$login';" else "email = '$login';")
+        val resultSet = database.select(query) ?: return null
+        while (resultSet.next()) {
+            return User(
+                id = resultSet.getString("id"),
+                firstName = resultSet.getString("first_name"),
+                secondName = resultSet.getString("second_name"),
+                phoneNumber = resultSet.getString("phone_number"),
+                birthday = resultSet.getString("birthday"),
+                age = resultSet.getInt("age"),
+                email = resultSet.getString("email"),
+                gender = Gender(
+                    resultSet.getString("gender_id"),
+                    resultSet.getString("gender")
+                ),
+                userType = UserType(
+                    resultSet.getString("user_type_id"),
+                    resultSet.getString("type"),
+                ),
+                subscription = Subscription(
+                    resultSet.getString("subscription_id"),
+                    resultSet.getInt("price"),
+                    resultSet.getString("start_date"),
+                    resultSet.getString("end_date"),
+                ),
+                country = Country(
+                    resultSet.getString("country_id"),
+                    resultSet.getString("country_name"),
+                ),
+            )
+        }
+        return null
     }
 }
