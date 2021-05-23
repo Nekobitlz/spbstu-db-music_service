@@ -12,7 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 sealed class EmptyViewState {
     object None : EmptyViewState()
     object Loading : EmptyViewState()
-    data class Error(val text: String = "", val onRetryClick: (() -> Unit)? = null) : EmptyViewState()
+    data class Error(val text: String? = null, val onRetryClick: (() -> Unit)? = null) : EmptyViewState()
 }
 
 class BaseEmptyView @JvmOverloads constructor(
@@ -40,7 +40,7 @@ class BaseEmptyView @JvmOverloads constructor(
                 progressBar.gone()
                 textView.visible()
                 retryButton.visible()
-                if (!textView.text.isNullOrBlank()) {
+                if (!textView.text.isNullOrEmpty()) {
                     textView.text = value.text
                 }
                 retryButton.setOnClickListener {

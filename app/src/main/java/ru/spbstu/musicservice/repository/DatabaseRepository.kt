@@ -7,6 +7,27 @@ class DatabaseRepository @Inject constructor(
     private val database: Database
 ) {
 
+    fun getPlaylists(user: User, count: Int = 10): List<Playlist> {
+        val query = "SELECT playlist.* FROM db.users" +
+                " INNER JOIN db.user_playlist ON users.id = user_playlist.user_id" +
+                " INNER JOIN db.playlist ON user_playlist.playlist_id = playlist.id" +
+                " WHERE users.id = ${user.id}" +
+                " LIMIT $count"
+        val resultSet = database.select(query) ?: return listOf()
+        val result = mutableListOf<Playlist>()
+        while (resultSet.next()) {
+            result.add(
+                Playlist(
+                    resultSet.getString("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("update_date"),
+                    resultSet.getInt("playbacks_count"),
+                )
+            )
+        }
+        return result
+    }
+
     fun getCds(count: Int = 10): List<Cd> {
         val resultSet = database.select(
             "SELECT * FROM db.cd ORDER BY rating DESC, release_date DESC LIMIT $count"

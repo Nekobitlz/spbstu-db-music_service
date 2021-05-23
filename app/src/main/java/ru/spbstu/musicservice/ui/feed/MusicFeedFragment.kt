@@ -42,6 +42,9 @@ class MusicFeedFragment : BaseRecyclerFragment() {
         super.onCreate(savedInstanceState)
         user = arguments?.getSerializable(PARAM_USER) as User
         setHasOptionsMenu(true)
+        if (savedInstanceState == null) {
+            viewModel.loadMusicFeeds(user)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -73,7 +76,6 @@ class MusicFeedFragment : BaseRecyclerFragment() {
                 Toast.makeText(context, "Click on toolbar", Toast.LENGTH_SHORT).show()
             }
         }
-
         viewModel.items.observe(viewLifecycleOwner, {
             when (it) {
                 is State.Loading -> {
@@ -96,7 +98,7 @@ class MusicFeedFragment : BaseRecyclerFragment() {
     }
 
     override fun onRefresh() {
-        viewModel.onRefresh()
+        viewModel.onRefresh(user)
     }
 
     companion object {

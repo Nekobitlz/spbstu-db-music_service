@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.musicservice.R
+import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.repository.DatabaseRepository
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
@@ -32,11 +33,7 @@ class MusicFeedViewModel @Inject constructor(
     val items: LiveData<State<List<BaseAdapterItem<RecyclerView.ViewHolder>>>>
         get() = _items
 
-    init {
-        loadMusicFeeds()
-    }
-
-    private fun loadMusicFeeds() {
+    fun loadMusicFeeds(user: User) {
         viewModelScope.launch {
             _items.postValue(State.Loading())
             withContext(Dispatchers.IO) {
@@ -52,8 +49,10 @@ class MusicFeedViewModel @Inject constructor(
                             )
                         }
                         .also {
-                            list += TitleMusicFeedItem(R.string.best_cd)
-                            list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
+                            if (it.isNotEmpty()) {
+                                list += TitleMusicFeedItem(R.string.best_cd)
+                                list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
+                            }
                         }
                     databaseRepository.getCharts(10)
                         .map {
@@ -64,8 +63,24 @@ class MusicFeedViewModel @Inject constructor(
                             )
                         }
                         .also {
-                            list += TitleMusicFeedItem(R.string.best_charts)
-                            list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
+                            if (it.isNotEmpty()) {
+                                list += TitleMusicFeedItem(R.string.best_charts, R.dimen.title_spacing_12)
+                                list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
+                            }
+                        }
+                    databaseRepository.getPlaylists(user, 10)
+                        .map {
+                            BaseMusicFeedRecycleItem(
+                                R.id.view_type_music_feed_playlists,
+                                it.id,
+                                it.name
+                            )
+                        }
+                        .also {
+                            if (it.isNotEmpty()) {
+                                list += TitleMusicFeedItem(R.string.my_playlists, R.dimen.title_spacing_12)
+                                list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
+                            }
                         }
                     if (list.isEmpty()) {
                         _items.postValue(State.Error(NoSuchElementException()))
@@ -91,7 +106,7 @@ class MusicFeedViewModel @Inject constructor(
         Toast.makeText(context, "Click on ${item.title} playlist", Toast.LENGTH_SHORT).show()
     }
 
-    fun onRefresh() {
-        loadMusicFeeds()
+    fun onRefresh(user: User) {
+        loadMusicFeeds(user)
     }
 }

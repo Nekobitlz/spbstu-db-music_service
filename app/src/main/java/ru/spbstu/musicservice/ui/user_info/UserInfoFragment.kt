@@ -1,9 +1,7 @@
 package ru.spbstu.musicservice.ui.user_info
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +33,8 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
         binding.btnBack.setOnClickListener {
             activity?.onBackPressed()
         }
+
+        binding.ivAvatar.setActualImageResource(if (user.gender.id == "2") R.drawable.female else R.drawable.male)
 
         binding.etName.setText(user.firstName + " " + user.secondName, TextView.BufferType.EDITABLE)
         binding.tvUserType.text = user.userType.type

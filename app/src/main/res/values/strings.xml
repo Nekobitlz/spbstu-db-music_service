@@ -27,4 +27,6 @@
     <string name="gender">Пол</string>
     <string name="birthday">Дата рождения</string>
     <string name="country">Страна</string>
+    <string name="my_playlists">Мои плэйлисты</string>
+    <string name="playlist">Плейлист</string>
 </resources>

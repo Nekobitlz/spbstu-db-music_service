@@ -43,7 +43,7 @@ class MusicFeedChartsViewHolder(
         binding.tvTitle.setTextOrHide(item.title)
         binding.ivCover.setImageURI(item.imageUrl)
         itemView.setOnClickListener {
-            musicFeedClickListener.onPlaylistClick(item)
+            musicFeedClickListener.onChartClick(item)
         }
     }
 }
@@ -60,7 +60,7 @@ class MusicFeedCdsViewHolder(
         binding.tvRating.setTextOrHide(item.rating.toString())
         binding.ivCover.setImageURI(item.imageUrl)
         itemView.setOnClickListener {
-            musicFeedClickListener.onPlaylistClick(item)
+            musicFeedClickListener.onCdClick(item)
         }
     }
 }

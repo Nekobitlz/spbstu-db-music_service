@@ -35,7 +35,7 @@ open class BaseAdapter :
                     old: BaseAdapterItem<RecyclerView.ViewHolder>,
                     new: BaseAdapterItem<RecyclerView.ViewHolder>
                 ): Boolean {
-                    return old == new
+                    return old.viewType == new.viewType
                 }
 
                 override fun areContentsTheSame(
