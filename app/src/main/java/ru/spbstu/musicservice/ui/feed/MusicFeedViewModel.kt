@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.repository.DatabaseRepository
+import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
 import ru.spbstu.musicservice.ui.feed.adapter.PagerMusicFeedItem
 import ru.spbstu.musicservice.ui.feed.adapter.TitleMusicFeedItem
@@ -27,36 +28,49 @@ class MusicFeedViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : ViewModel(), MusicFeedClickListener {
 
-    private val _items = MutableLiveData<List<BaseAdapterItem<RecyclerView.ViewHolder>>>()
-    val items: LiveData<List<BaseAdapterItem<RecyclerView.ViewHolder>>>
+    private val _items = MutableLiveData<State<List<BaseAdapterItem<RecyclerView.ViewHolder>>>>()
+    val items: LiveData<State<List<BaseAdapterItem<RecyclerView.ViewHolder>>>>
         get() = _items
 
     init {
         viewModelScope.launch {
+            _items.postValue(State.Loading())
             withContext(Dispatchers.IO) {
-                val list = mutableListOf<BaseAdapterItem<out RecyclerView.ViewHolder>>()
-                databaseRepository.getCds(10)
-                    .map {
-                        BaseMusicFeedRecycleItem(
-                            R.id.view_type_music_feed_cds,
-                            it.id,
-                            it.name,
-                            rating = it.rating
-                        )
+                try {
+                    val list = mutableListOf<BaseAdapterItem<out RecyclerView.ViewHolder>>()
+                    databaseRepository.getCds(10)
+                        .map {
+                            BaseMusicFeedRecycleItem(
+                                R.id.view_type_music_feed_cds,
+                                it.id,
+                                it.name,
+                                rating = it.rating
+                            )
+                        }
+                        .also {
+                            list += TitleMusicFeedItem(R.string.best_cd)
+                            list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
+                        }
+                    databaseRepository.getCharts(10)
+                        .map {
+                            BaseMusicFeedRecycleItem(
+                                R.id.view_type_music_feed_charts,
+                                it.id,
+                                it.name
+                            )
+                        }
+                        .also {
+                            list += TitleMusicFeedItem(R.string.best_charts)
+                            list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
+                        }
+                    if (list.isEmpty()) {
+                        _items.postValue(State.Error(NoSuchElementException()))
+                    } else {
+                        _items.postValue(State.Success(list.toList() as List<BaseAdapterItem<RecyclerView.ViewHolder>>))
                     }
-                    .also {
-                        list += TitleMusicFeedItem(R.string.best_cd)
-                        list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
-                    }
-                databaseRepository.getCharts(10)
-                    .map {
-                        BaseMusicFeedRecycleItem(R.id.view_type_music_feed_charts, it.id, it.name)
-                    }
-                    .also {
-                        list += TitleMusicFeedItem(R.string.best_charts)
-                        list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
-                    }
-                _items.postValue(list.toList() as List<BaseAdapterItem<RecyclerView.ViewHolder>>)
+                } catch (t: Throwable) {
+                    _items.postValue(State.Error(t))
+                }
             }
         }
     }

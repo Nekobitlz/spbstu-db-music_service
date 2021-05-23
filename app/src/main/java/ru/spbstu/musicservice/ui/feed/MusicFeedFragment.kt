@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.commons.*
 import ru.spbstu.commons.adapter.BaseAdapter
 import ru.spbstu.commons.adapter.BaseAdapterItem
+import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
 import ru.spbstu.musicservice.ui.feed.item.BaseMusicFeedRecycleItem
 
@@ -30,13 +31,24 @@ class MusicFeedFragment : BaseRecyclerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerBinding.emptyView.state = EmptyViewState.Loading
-        recyclerBinding.list.gone()
+        val user = arguments?.getSerializable(PARAM_USER)
 
         viewModel.items.observe(viewLifecycleOwner, {
-            recyclerBinding.emptyView.state = EmptyViewState.None
-            recyclerBinding.list.visible()
-            adapter.submitList(it)
+            when (it) {
+                is State.Loading -> {
+                    recyclerBinding.emptyView.state = EmptyViewState.Loading
+                    recyclerBinding.list.gone()
+                }
+                is State.Success -> {
+                    recyclerBinding.emptyView.state = EmptyViewState.None
+                    recyclerBinding.list.visible()
+                    adapter.submitList(it.item)
+                }
+                is State.Error -> {
+                    recyclerBinding.emptyView.state = EmptyViewState.Error()
+                    recyclerBinding.list.gone()
+                }
+            }
         })
     }
 
