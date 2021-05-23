@@ -65,16 +65,22 @@ class MusicFeedFragment : BaseRecyclerFragment() {
                     recyclerBinding.list.gone()
                 }
                 is State.Success -> {
+                    recyclerBinding.swipeRefresh.isRefreshing = false
                     recyclerBinding.emptyView.state = EmptyViewState.None
                     recyclerBinding.list.visible()
                     adapter.submitList(it.item)
                 }
                 is State.Error -> {
+                    recyclerBinding.swipeRefresh.isRefreshing = false
                     recyclerBinding.emptyView.state = EmptyViewState.Error()
                     recyclerBinding.list.gone()
                 }
             }
         })
+    }
+
+    override fun onRefresh() {
+        viewModel.onRefresh()
     }
 
     companion object {

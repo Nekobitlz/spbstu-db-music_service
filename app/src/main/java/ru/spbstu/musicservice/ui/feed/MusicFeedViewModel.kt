@@ -33,6 +33,10 @@ class MusicFeedViewModel @Inject constructor(
         get() = _items
 
     init {
+        loadMusicFeeds()
+    }
+
+    private fun loadMusicFeeds() {
         viewModelScope.launch {
             _items.postValue(State.Loading())
             withContext(Dispatchers.IO) {
@@ -85,5 +89,9 @@ class MusicFeedViewModel @Inject constructor(
 
     override fun onPlaylistClick(item: BaseMusicFeedRecycleItem) {
         Toast.makeText(context, "Click on ${item.title} playlist", Toast.LENGTH_SHORT).show()
+    }
+
+    fun onRefresh() {
+        loadMusicFeeds()
     }
 }

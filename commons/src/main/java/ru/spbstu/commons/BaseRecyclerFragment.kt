@@ -39,6 +39,12 @@ abstract class BaseRecyclerFragment : Fragment(R.layout.fragment_base_recycler) 
             setHasFixedSize(true)
             this.adapter = this@BaseRecyclerFragment.adapter
         }
+        recyclerBinding.swipeRefresh.setOnRefreshListener {
+            onRefresh()
+        }
+    }
+
+    protected open fun onRefresh() {
     }
 /* TODO
     override fun onSaveInstanceState(outState: Bundle) {

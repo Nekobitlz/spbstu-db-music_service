@@ -41,12 +41,15 @@ class PagerViewHolder(
         recyclerView.adapter = it
     }
 
-    fun bind(list: List<BaseMusicFeedRecycleItem>) {
+    init {
         PagerSnapHelper().attachToRecyclerView(recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(
             itemView.context, RecyclerView.HORIZONTAL, false
         )
         recyclerView.setHasFixedSize(true)
+    }
+
+    fun bind(list: List<BaseMusicFeedRecycleItem>) {
         adapter.submitList(list)
     }
 }
