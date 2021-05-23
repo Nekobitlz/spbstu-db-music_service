@@ -1,20 +1,21 @@
 package ru.spbstu.musicservice.ui.feed
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.drawee.view.SimpleDraweeView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.commons.*
 import ru.spbstu.commons.adapter.BaseAdapter
-import ru.spbstu.commons.adapter.BaseAdapterItem
+import ru.spbstu.musicservice.R
+import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.ui.State
-import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
-import ru.spbstu.musicservice.ui.feed.item.BaseMusicFeedRecycleItem
 
 @AndroidEntryPoint
 class MusicFeedFragment : BaseRecyclerFragment() {
@@ -29,9 +30,33 @@ class MusicFeedFragment : BaseRecyclerFragment() {
         return BaseAdapter()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_music_feed, menu)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val user = arguments?.getSerializable(PARAM_USER)
+        val user = arguments?.getSerializable(PARAM_USER) as User
+        val activity = activity as? AppCompatActivity
+        activity?.supportActionBar?.let {
+            it.setDisplayShowCustomEnabled(true)
+            it.setCustomView(R.layout.toolbar_music_feed_user)
+            it.customView?.findViewById<TextView>(R.id.tv_user_name)?.apply {
+                text = "${user.firstName} ${user.secondName}"
+            }
+            it.customView?.findViewById<SimpleDraweeView>(R.id.iv_avatar)?.apply {
+                setActualImageResource(if (user.gender.id == "2") R.drawable.female else R.drawable.male)
+            }
+            it.customView?.setOnClickListener {
+                Toast.makeText(context, "Click on toolbar", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         viewModel.items.observe(viewLifecycleOwner, {
             when (it) {

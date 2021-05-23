@@ -21,10 +21,17 @@ class Navigator @Inject constructor(
     private val activity: AppCompatActivity?
         get() = activityReference.get()
 
-    fun navigateTo(fragment: Fragment, args: Bundle? = null) = activity?.let { activity ->
-        fragment.arguments = args
-        activity.supportFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment)
-            .commit()
+    fun navigateTo(
+        fragment: Fragment,
+        args: Bundle? = null,
+        addToBackstack: Boolean = false
+    ): Int? {
+        return activity?.let { activity ->
+            fragment.arguments = args
+            activity.supportFragmentManager.beginTransaction()
+                .replace(R.id.container, fragment)
+                .apply { if (addToBackstack) addToBackStack(null) }
+                .commit()
+        }
     }
 }

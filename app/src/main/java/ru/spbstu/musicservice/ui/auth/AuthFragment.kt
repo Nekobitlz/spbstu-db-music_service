@@ -11,13 +11,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.postgresql.util.Base64
 import ru.spbstu.commons.hide
 import ru.spbstu.commons.visible
-import ru.spbstu.musicservice.APP_STORAGE
-import ru.spbstu.musicservice.PARAM_LOGIN_TOKEN
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.databinding.FragmentAuthBinding
 import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
+import ru.spbstu.musicservice.ui.main.APP_STORAGE
+import ru.spbstu.musicservice.ui.main.PARAM_AUTH_LOGIN
+import ru.spbstu.musicservice.ui.main.PARAM_AUTH_PASSWORD
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -31,7 +32,6 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.actionBar?.hide()
         viewModel.authState.observe(viewLifecycleOwner) {
             when (it) {
                 is State.Loading -> {
@@ -71,8 +71,16 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private fun saveToken() {
         val sharedPreferences = activity?.getSharedPreferences(APP_STORAGE, Context.MODE_PRIVATE)
-        val token = binding.etLogin.text.toString() + binding.etPassword.text.toString()
-        val encodedToken = Base64.encodeBytes(token.encodeToByteArray())
-        sharedPreferences?.edit()?.putString(PARAM_LOGIN_TOKEN, encodedToken)?.apply()
+
+        val loginText = binding.etLogin.text.toString()
+        val encodedLogin = Base64.encodeBytes(loginText.encodeToByteArray())
+
+        val passwordText = binding.etPassword.text.toString()
+        val encodedPassword = Base64.encodeBytes(passwordText.encodeToByteArray())
+
+        sharedPreferences?.edit()
+            ?.putString(PARAM_AUTH_LOGIN, encodedLogin)
+            ?.putString(PARAM_AUTH_PASSWORD, encodedPassword)
+            ?.apply()
     }
 }

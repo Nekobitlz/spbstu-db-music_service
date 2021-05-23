@@ -3,6 +3,7 @@
 
     <string name="best_cd">Популярные CD</string>
     <string name="best_charts">Чарты</string>
+    <string name="settings">Настройки</string>
 
     <string name="login">Номер телефона или адрес эл.почты</string>
     <string name="password">Пароль</string>
