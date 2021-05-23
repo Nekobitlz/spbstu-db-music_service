@@ -53,7 +53,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 }
                 is State.Success -> {
                     saveToken()
-                    navigator.toMusicFeed(it.item)
+                    navigator.toMusicFeed(it.item, true)
                 }
                 is State.Error -> {
                     binding.progressBar.hide()

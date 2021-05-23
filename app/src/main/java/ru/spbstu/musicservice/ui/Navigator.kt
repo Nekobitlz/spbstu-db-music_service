@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import ru.spbstu.musicservice.R
@@ -27,16 +28,17 @@ class Navigator @Inject constructor(
     private val activity: AppCompatActivity?
         get() = activityReference.get()
 
-    fun toAuth() {
-        navigateTo(AuthFragment())
+    fun toAuth(addToBackstack: Boolean = false) {
+        navigateTo(AuthFragment(), addToBackstack = addToBackstack)
     }
 
-    fun toMusicFeed(user: User) {
+    fun toMusicFeed(user: User, popBackstack: Boolean = false) {
         navigateTo(
             fragment = MusicFeedFragment(),
             args = Bundle().apply {
                 putSerializable(MusicFeedFragment.PARAM_USER, user)
-            }
+            },
+            popBackstack = popBackstack
         )
     }
 
@@ -67,11 +69,13 @@ class Navigator @Inject constructor(
     private fun navigateTo(
         fragment: Fragment,
         args: Bundle? = null,
-        addToBackstack: Boolean = false
-    ): Int? {
-        return activity?.let { activity ->
-            fragment.arguments = args
-            activity.supportFragmentManager.beginTransaction()
+        addToBackstack: Boolean = false,
+        popBackstack: Boolean = false,
+    ) = activity?.let { activity ->
+        fragment.arguments = args
+        activity.supportFragmentManager.apply {
+            if (popBackstack) popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            beginTransaction()
                 .replace(R.id.container, fragment)
                 .apply { if (addToBackstack) addToBackStack(null) }
                 .commit()

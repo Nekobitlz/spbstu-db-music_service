@@ -5,11 +5,18 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.LayoutMode
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BasicGridItem
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.bottomsheets.gridItems
+import com.afollestad.materialdialogs.list.listItems
 import com.facebook.drawee.view.SimpleDraweeView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.commons.*
@@ -63,18 +70,27 @@ class MusicFeedFragment : BaseRecyclerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = activity as? AppCompatActivity
-        activity?.supportActionBar?.let {
-            it.setDisplayHomeAsUpEnabled(false)
-            it.setDisplayShowCustomEnabled(true)
-            it.setCustomView(R.layout.toolbar_music_feed_user)
-            it.customView?.findViewById<TextView>(R.id.tv_user_name)?.apply {
+        activity?.supportActionBar?.let { actionBar ->
+            actionBar.setDisplayHomeAsUpEnabled(false)
+            actionBar.setDisplayShowCustomEnabled(true)
+            actionBar.setCustomView(R.layout.toolbar_music_feed_user)
+            actionBar.customView?.findViewById<TextView>(R.id.tv_user_name)?.apply {
                 text = "${user.firstName} ${user.secondName}"
             }
-            it.customView?.findViewById<SimpleDraweeView>(R.id.iv_avatar)?.apply {
+            actionBar.customView?.findViewById<SimpleDraweeView>(R.id.iv_avatar)?.apply {
                 setActualImageResource(if (user.gender.id == "2") R.drawable.female else R.drawable.male)
             }
-            it.customView?.setOnClickListener {
-                Toast.makeText(context, "Click on toolbar", Toast.LENGTH_SHORT).show()
+            actionBar.customView?.setOnClickListener {
+                MaterialDialog(it.context, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+                    cornerRadius(16f)
+                    title(R.string.choose_account)
+                    val items = listOf("Андрей Киселев", "Иван Матвеец", "Добавить новый аккаунт")
+                    listItems(items = items) { dialog, index, text ->
+                        if (items.size - 1 == index) {
+                            navigator.toAuth(true)
+                        }
+                    }
+                }
             }
         }
         viewModel.items.observe(viewLifecycleOwner, {

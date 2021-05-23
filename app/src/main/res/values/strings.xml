@@ -33,4 +33,5 @@
     <string name="payment_date">Дата платежа: %1$s</string>
     <string name="payment">Платеж</string>
     <string name="payments">Платежи</string>
+    <string name="choose_account">Выберите аккаунт</string>
 </resources>
