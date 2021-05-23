@@ -16,7 +16,9 @@ import ru.spbstu.musicservice.ui.State
 import javax.inject.Inject
 
 const val APP_STORAGE = "APP_STORAGE"
+const val PARAM_AUTH_USERS_COUNT = "PARAM_AUTH_USERS_COUNT"
 const val PARAM_AUTH_LOGIN = "PARAM_AUTH_LOGIN"
+const val PARAM_USER = "PARAM_USER"
 const val PARAM_AUTH_PASSWORD = "PARAM_AUTH_PASSWORD"
 
 @AndroidEntryPoint

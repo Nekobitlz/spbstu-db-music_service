@@ -1,23 +1,21 @@
 package ru.spbstu.musicservice.ui.feed
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.bottomsheets.BasicGridItem
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
-import com.afollestad.materialdialogs.bottomsheets.gridItems
 import com.afollestad.materialdialogs.list.listItems
 import com.facebook.drawee.view.SimpleDraweeView
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.commons.*
 import ru.spbstu.commons.adapter.BaseAdapter
@@ -25,6 +23,8 @@ import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
+import ru.spbstu.musicservice.ui.main.APP_STORAGE
+import ru.spbstu.musicservice.ui.main.PARAM_AUTH_USERS_COUNT
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -84,10 +84,28 @@ class MusicFeedFragment : BaseRecyclerFragment() {
                 MaterialDialog(it.context, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
                     cornerRadius(16f)
                     title(R.string.choose_account)
-                    val items = listOf("Андрей Киселев", "Иван Матвеец", "Добавить новый аккаунт")
+                    val sharedPreferences =
+                        activity.getSharedPreferences(APP_STORAGE, Context.MODE_PRIVATE)
+                    val usersCount = sharedPreferences?.getInt(PARAM_AUTH_USERS_COUNT, 0) ?: 0
+                    val list = mutableListOf<User>()
+                    for (i in 0 until usersCount) {
+                        val json = sharedPreferences.getString(PARAM_USER + i, null) ?: continue
+                        val user = Gson().fromJson(json, User::class.java)
+                        list.add(user)
+                    }
+                    val items = list
+                        .map {
+                            "${it.firstName} ${it.secondName}"
+                        }
+                        .toMutableList()
+                        .apply {
+                            add(resources.getString(R.string.add_user))
+                        }
                     listItems(items = items) { dialog, index, text ->
                         if (items.size - 1 == index) {
                             navigator.toAuth(true)
+                        } else {
+                            navigator.toMusicFeed(list[index], true)
                         }
                     }
                 }

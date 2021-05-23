@@ -8,19 +8,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.afollestad.materialdialogs.MaterialDialog
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import org.postgresql.util.Base64
 import ru.spbstu.commons.hide
 import ru.spbstu.commons.visible
 import ru.spbstu.musicservice.R
+import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.databinding.FragmentAuthBinding
 import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
-import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
-import ru.spbstu.musicservice.ui.main.APP_STORAGE
-import ru.spbstu.musicservice.ui.main.PARAM_AUTH_LOGIN
-import ru.spbstu.musicservice.ui.main.PARAM_AUTH_PASSWORD
+import ru.spbstu.musicservice.ui.main.*
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class AuthFragment : Fragment(R.layout.fragment_auth) {
@@ -52,7 +52,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                     binding.etPassword.isEnabled = false
                 }
                 is State.Success -> {
-                    saveToken()
+                    saveToken(it.item)
                     navigator.toMusicFeed(it.item, true)
                 }
                 is State.Error -> {
@@ -75,7 +75,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         }
     }
 
-    private fun saveToken() {
+    private fun saveToken(user: User) {
         val sharedPreferences = activity?.getSharedPreferences(APP_STORAGE, Context.MODE_PRIVATE)
 
         val loginText = binding.etLogin.text.toString()
@@ -84,9 +84,12 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         val passwordText = binding.etPassword.text.toString()
         val encodedPassword = Base64.encodeBytes(passwordText.encodeToByteArray())
 
+        val usersCount = sharedPreferences?.getInt(PARAM_AUTH_USERS_COUNT, 0) ?: 0
         sharedPreferences?.edit()
+            ?.putInt(PARAM_AUTH_USERS_COUNT, usersCount + 1)
             ?.putString(PARAM_AUTH_LOGIN, encodedLogin)
             ?.putString(PARAM_AUTH_PASSWORD, encodedPassword)
+            ?.putString(PARAM_USER + usersCount, Gson().toJson(user))
             ?.apply()
     }
 }
