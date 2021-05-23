@@ -51,12 +51,7 @@ class MainActivity : AppCompatActivity() {
                         is State.Success -> {
                             binding.container.visible()
                             binding.progressBar.gone()
-                            navigator.navigateTo(
-                                MusicFeedFragment(),
-                                Bundle().apply {
-                                    putSerializable(MusicFeedFragment.PARAM_USER, it.item)
-                                }
-                            )
+                            navigator.toMusicFeed(it.item)
                         }
                         is State.Error -> {
                             openLoginFragment()
@@ -70,6 +65,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun openLoginFragment() {
         binding.progressBar.gone()
-        navigator.navigateTo(AuthFragment())
+        binding.container.visible()
+        navigator.toAuth()
     }
 }

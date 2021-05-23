@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import ru.spbstu.musicservice.R
+import ru.spbstu.musicservice.data.User
+import ru.spbstu.musicservice.ui.auth.AuthFragment
+import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
@@ -21,7 +24,20 @@ class Navigator @Inject constructor(
     private val activity: AppCompatActivity?
         get() = activityReference.get()
 
-    fun navigateTo(
+    fun toAuth() {
+        navigateTo(AuthFragment())
+    }
+
+    fun toMusicFeed(user: User) {
+        navigateTo(
+            fragment = MusicFeedFragment(),
+            args = Bundle().apply {
+                putSerializable(MusicFeedFragment.PARAM_USER, user)
+            }
+        )
+    }
+
+    private fun navigateTo(
         fragment: Fragment,
         args: Bundle? = null,
         addToBackstack: Boolean = false

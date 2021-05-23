@@ -42,12 +42,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 }
                 is State.Success -> {
                     saveToken()
-                    navigator.navigateTo(
-                        MusicFeedFragment(),
-                        Bundle().apply {
-                            putSerializable(MusicFeedFragment.PARAM_USER, it.item)
-                        }
-                    )
+                    navigator.toMusicFeed(it.item)
                 }
                 is State.Error -> {
                     binding.progressBar.hide()
