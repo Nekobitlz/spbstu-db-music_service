@@ -22,7 +22,7 @@ abstract class BaseRecyclerFragment : Fragment(R.layout.fragment_base_recycler) 
 
     protected fun createRecyclerView(): RecyclerView = recyclerBinding.list
 
-    protected fun createRecyclerLayoutManager(): LinearLayoutManager {
+    protected open fun createRecyclerLayoutManager(): LinearLayoutManager {
         return LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
     }
 
@@ -43,6 +43,27 @@ abstract class BaseRecyclerFragment : Fragment(R.layout.fragment_base_recycler) 
 
     protected open fun onRefresh() {
     }
+
+    protected open fun showData() {
+        recyclerBinding.swipeRefresh.isRefreshing = false
+        recyclerBinding.emptyView.state = EmptyViewState.None
+        recyclerBinding.list.visible()
+    }
+
+    protected open fun showError() {
+        recyclerBinding.swipeRefresh.isRefreshing = false
+        recyclerBinding.emptyView.state = EmptyViewState.Error(
+            resources.getString(R.string.default_error),
+            onRetryClick = { onRefresh() }
+        )
+        recyclerBinding.list.gone()
+    }
+
+    protected open fun showLoading() {
+        recyclerBinding.emptyView.state = EmptyViewState.Loading
+        recyclerBinding.list.gone()
+    }
+
 /* TODO
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

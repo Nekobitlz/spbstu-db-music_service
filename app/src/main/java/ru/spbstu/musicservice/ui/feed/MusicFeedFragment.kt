@@ -32,11 +32,11 @@ class MusicFeedFragment : BaseRecyclerFragment() {
         createRecyclerAdapter() as BaseAdapter
     }
 
-    private lateinit var user: User
-
     override fun createRecyclerAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return BaseAdapter()
     }
+
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +64,7 @@ class MusicFeedFragment : BaseRecyclerFragment() {
         super.onViewCreated(view, savedInstanceState)
         val activity = activity as? AppCompatActivity
         activity?.supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(false)
             it.setDisplayShowCustomEnabled(true)
             it.setCustomView(R.layout.toolbar_music_feed_user)
             it.customView?.findViewById<TextView>(R.id.tv_user_name)?.apply {
@@ -78,23 +79,24 @@ class MusicFeedFragment : BaseRecyclerFragment() {
         }
         viewModel.items.observe(viewLifecycleOwner, {
             when (it) {
-                is State.Loading -> {
-                    recyclerBinding.emptyView.state = EmptyViewState.Loading
-                    recyclerBinding.list.gone()
-                }
+                is State.Loading -> showLoading()
                 is State.Success -> {
-                    recyclerBinding.swipeRefresh.isRefreshing = false
-                    recyclerBinding.emptyView.state = EmptyViewState.None
-                    recyclerBinding.list.visible()
+                    showData()
                     adapter.submitList(it.item)
                 }
-                is State.Error -> {
-                    recyclerBinding.swipeRefresh.isRefreshing = false
-                    recyclerBinding.emptyView.state = EmptyViewState.Error()
-                    recyclerBinding.list.gone()
-                }
+                is State.Error -> showError()
             }
         })
+        viewModel.navigationEvent.observe(viewLifecycleOwner) {
+            when (it.type) {
+                NavigationType.CHART -> TODO()
+                NavigationType.CD -> TODO()
+                NavigationType.PLAYLIST -> TODO()
+                NavigationType.CHART_MORE -> navigator.toCharts()
+                NavigationType.CD_MORE -> TODO()
+                NavigationType.PLAYLIST_MORE -> TODO()
+            }
+        }
     }
 
     override fun onRefresh() {

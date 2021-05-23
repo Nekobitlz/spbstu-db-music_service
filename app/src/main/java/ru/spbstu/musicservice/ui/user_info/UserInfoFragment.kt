@@ -7,12 +7,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.databinding.FragmentUserInfoBinding
+import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment.Companion.PARAM_USER
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
+
+    @Inject
+    lateinit var navigator: Navigator
 
     private val binding: FragmentUserInfoBinding by viewBinding()
 
@@ -48,7 +55,7 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
         binding.itemSubscription.tvStartDate.text = user.subscription.startDate
         binding.itemSubscription.tvEndDate.text = user.subscription.endDate
         binding.itemSubscription.btnGoToSubscription.setOnClickListener {
-            Toast.makeText(context, "SUBSCRIPTION", Toast.LENGTH_SHORT).show()
+            navigator.toPayments(user)
         }
     }
 }

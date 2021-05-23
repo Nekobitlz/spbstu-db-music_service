@@ -5,4 +5,5 @@
     <item name="view_type_music_feed_playlists" type="id" />
     <item name="view_type_music_feed_charts" type="id" />
     <item name="view_type_music_feed_cds" type="id" />
+    <item name="view_type_payment" type="id" />
 </resources>

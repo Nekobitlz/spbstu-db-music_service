@@ -39,10 +39,10 @@ class BaseEmptyView @JvmOverloads constructor(
                 visible()
                 progressBar.gone()
                 textView.visible()
-                retryButton.visible()
                 if (!textView.text.isNullOrEmpty()) {
                     textView.text = value.text
                 }
+                retryButton.setVisible(value.onRetryClick != null)
                 retryButton.setOnClickListener {
                     value.onRetryClick?.invoke()
                 }

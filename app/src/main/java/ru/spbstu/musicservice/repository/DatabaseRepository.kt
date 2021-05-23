@@ -66,6 +66,26 @@ class DatabaseRepository @Inject constructor(
         return result
     }
 
+    fun getPayments(user: User, count: Int = 15): List<Payment> {
+        val resultSet = database.select(
+            "SELECT * FROM db.payments " +
+                    "WHERE payments_date " +
+                    "BETWEEN '${user.subscription.startDate}' AND '${user.subscription.endDate}'" +
+                    "LIMIT $count"
+        ) ?: return listOf()
+        val result = mutableListOf<Payment>()
+        while (resultSet.next()) {
+            result.add(
+                Payment(
+                    resultSet.getString("id"),
+                    resultSet.getString("payments_date"),
+                    resultSet.getInt("amount")
+                )
+            )
+        }
+        return result
+    }
+
     fun getUser(login: String, password: String): User? {
         var query = "SELECT * " +
                 "FROM db.users " +

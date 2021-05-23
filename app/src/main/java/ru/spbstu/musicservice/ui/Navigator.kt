@@ -9,7 +9,9 @@ import dagger.hilt.android.scopes.ActivityScoped
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.ui.auth.AuthFragment
+import ru.spbstu.musicservice.ui.charts.ChartsFragment
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
+import ru.spbstu.musicservice.ui.payments.PaymentsFragment
 import ru.spbstu.musicservice.ui.user_info.UserInfoFragment
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -36,6 +38,20 @@ class Navigator @Inject constructor(
                 putSerializable(MusicFeedFragment.PARAM_USER, user)
             }
         )
+    }
+
+    fun toPayments(user: User) {
+        navigateTo(
+            fragment = PaymentsFragment(),
+            args = Bundle().apply {
+                putSerializable(MusicFeedFragment.PARAM_USER, user)
+            },
+            addToBackstack = true
+        )
+    }
+
+    fun toCharts() {
+        navigateTo(ChartsFragment())
     }
 
     fun toUserInfo(user: User) {

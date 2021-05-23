@@ -20,7 +20,7 @@
     <string name="profile_hint_first_name">Имя</string>
 
     <string name="subscription_active">Подписка активна</string>
-    <string name="subscription_settings">Управление подпиской</string>
+    <string name="subscription_settings">Управление платежами</string>
     <string name="user_information_title">Информация о пользователе</string>
     <string name="phone_number">Номер телефона</string>
     <string name="email">Электронная почта</string>
@@ -29,4 +29,8 @@
     <string name="country">Страна</string>
     <string name="my_playlists">Мои плэйлисты</string>
     <string name="playlist">Плейлист</string>
+    <string name="payment_amount">Сумма: %1$d рублей</string>
+    <string name="payment_date">Дата платежа: %1$s</string>
+    <string name="payment">Платеж</string>
+    <string name="payments">Платежи</string>
 </resources>

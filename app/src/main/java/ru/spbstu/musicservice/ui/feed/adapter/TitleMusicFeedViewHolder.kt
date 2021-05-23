@@ -18,6 +18,7 @@ import ru.spbstu.musicservice.databinding.ItemMusicFeedTitleBinding
 class TitleMusicFeedItem(
     @StringRes private val titleRes: Int,
     @DimenRes private val topPadding: Int? = null,
+    private val onClick: () -> Unit,
 ) : BaseAdapterItem<TitleMusicFeedViewHolder>() {
 
     override val viewType: Int
@@ -25,25 +26,27 @@ class TitleMusicFeedItem(
 
     override fun createViewHolder(parent: ViewGroup): TitleMusicFeedViewHolder {
         return TitleMusicFeedViewHolder(
-            ItemMusicFeedTitleBinding.inflate(parent.layoutInflater, parent, false),
-            topPadding
+            ItemMusicFeedTitleBinding.inflate(parent.layoutInflater, parent, false)
         )
     }
 
     override fun bind(holder: TitleMusicFeedViewHolder) {
-        holder.bind(titleRes)
+        holder.bind(titleRes, topPadding, onClick)
     }
 
 }
 
 class TitleMusicFeedViewHolder(
     binding: ItemMusicFeedTitleBinding,
-    @DimenRes private val topPadding: Int? = null,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val tvTitle = binding.tvTitle
 
-    fun bind(@StringRes titleRes: Int) {
+    fun bind(
+        @StringRes titleRes: Int,
+        @DimenRes topPadding: Int?,
+        onClick: () -> Unit,
+    ) {
         val resources = itemView.resources
         tvTitle.text = resources.getString(titleRes)
         if (topPadding != null) {
@@ -55,7 +58,7 @@ class TitleMusicFeedViewHolder(
             )
         }
         itemView.setOnClickListener {
-            Toast.makeText(itemView.context, "Click more", Toast.LENGTH_SHORT).show()
+            onClick()
         }
     }
 }

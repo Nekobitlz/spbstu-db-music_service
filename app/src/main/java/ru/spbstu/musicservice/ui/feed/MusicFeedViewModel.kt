@@ -1,14 +1,11 @@
 package ru.spbstu.musicservice.ui.feed
 
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,12 +23,15 @@ import javax.inject.Inject
 @HiltViewModel
 class MusicFeedViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository,
-    @ApplicationContext private val context: Context,
 ) : ViewModel(), MusicFeedClickListener {
 
     private val _items = MutableLiveData<State<List<BaseAdapterItem<RecyclerView.ViewHolder>>>>()
     val items: LiveData<State<List<BaseAdapterItem<RecyclerView.ViewHolder>>>>
         get() = _items
+
+    private val _navigationEvent = MutableLiveData<NavigationEvent>()
+    val navigationEvent: LiveData<NavigationEvent>
+        get() = _navigationEvent
 
     fun loadMusicFeeds(user: User) {
         viewModelScope.launch {
@@ -50,7 +50,11 @@ class MusicFeedViewModel @Inject constructor(
                         }
                         .also {
                             if (it.isNotEmpty()) {
-                                list += TitleMusicFeedItem(R.string.best_cd)
+                                list += TitleMusicFeedItem(
+                                    R.string.best_cd,
+                                    onClick = {
+                                        _navigationEvent.value = NavigationEvent(type = NavigationType.CD_MORE)
+                                    })
                                 list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
                             }
                         }
@@ -64,7 +68,13 @@ class MusicFeedViewModel @Inject constructor(
                         }
                         .also {
                             if (it.isNotEmpty()) {
-                                list += TitleMusicFeedItem(R.string.best_charts, R.dimen.title_spacing_12)
+                                list += TitleMusicFeedItem(
+                                    R.string.best_charts,
+                                    R.dimen.title_spacing_12,
+                                    onClick = {
+                                        _navigationEvent.value = NavigationEvent(type = NavigationType.CHART_MORE)
+                                    }
+                                )
                                 list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
                             }
                         }
@@ -78,7 +88,13 @@ class MusicFeedViewModel @Inject constructor(
                         }
                         .also {
                             if (it.isNotEmpty()) {
-                                list += TitleMusicFeedItem(R.string.my_playlists, R.dimen.title_spacing_12)
+                                list += TitleMusicFeedItem(
+                                    R.string.my_playlists,
+                                    R.dimen.title_spacing_12,
+                                    onClick = {
+                                        _navigationEvent.value = NavigationEvent(type = NavigationType.PLAYLIST_MORE)
+                                    }
+                                )
                                 list += PagerMusicFeedItem(it, this@MusicFeedViewModel)
                             }
                         }
@@ -95,18 +111,29 @@ class MusicFeedViewModel @Inject constructor(
     }
 
     override fun onChartClick(item: BaseMusicFeedRecycleItem) {
-        Toast.makeText(context, "Click on ${item.title} chart", Toast.LENGTH_SHORT).show()
+        _navigationEvent.value = NavigationEvent(item, NavigationType.CHART)
     }
 
     override fun onCdClick(item: BaseMusicFeedRecycleItem) {
-        Toast.makeText(context, "Click on ${item.title} cd", Toast.LENGTH_SHORT).show()
+        _navigationEvent.value = NavigationEvent(item, NavigationType.CD)
     }
 
     override fun onPlaylistClick(item: BaseMusicFeedRecycleItem) {
-        Toast.makeText(context, "Click on ${item.title} playlist", Toast.LENGTH_SHORT).show()
+        _navigationEvent.value = NavigationEvent(item, NavigationType.PLAYLIST)
     }
 
     fun onRefresh(user: User) {
         loadMusicFeeds(user)
     }
+}
+
+class NavigationEvent(
+    val item: BaseMusicFeedRecycleItem? = null,
+    val type: NavigationType = NavigationType.NONE
+)
+
+enum class NavigationType {
+    NONE,
+    CHART, CD, PLAYLIST,
+    CHART_MORE, CD_MORE, PLAYLIST_MORE,
 }
