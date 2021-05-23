@@ -16,9 +16,6 @@ abstract class BaseRecyclerFragment : Fragment(R.layout.fragment_base_recycler) 
         createRecyclerAdapter()
     }
 
-    protected val recyclerLayoutManager by lazyUnsychronized {
-        createRecyclerLayoutManager()
-    }
     protected lateinit var recyclerView: RecyclerView
 
     protected abstract fun createRecyclerAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>
@@ -35,7 +32,7 @@ abstract class BaseRecyclerFragment : Fragment(R.layout.fragment_base_recycler) 
 
     protected fun initRecyclerView() {
         recyclerView = createRecyclerView().apply {
-            layoutManager = recyclerLayoutManager
+            layoutManager = createRecyclerLayoutManager()
             setHasFixedSize(true)
             this.adapter = this@BaseRecyclerFragment.adapter
         }

@@ -3,6 +3,7 @@ package ru.spbstu.musicservice.ui.auth
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -29,6 +30,16 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private val binding: FragmentAuthBinding by viewBinding()
     private val viewModel: AuthViewModel by viewModels()
+
+    override fun onStart() {
+        super.onStart()
+        (activity as? AppCompatActivity)?.supportActionBar?.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as? AppCompatActivity)?.supportActionBar?.show()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

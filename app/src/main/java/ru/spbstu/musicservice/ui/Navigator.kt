@@ -10,6 +10,7 @@ import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.ui.auth.AuthFragment
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
+import ru.spbstu.musicservice.ui.user_info.UserInfoFragment
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
@@ -34,6 +35,16 @@ class Navigator @Inject constructor(
             args = Bundle().apply {
                 putSerializable(MusicFeedFragment.PARAM_USER, user)
             }
+        )
+    }
+
+    fun toUserInfo(user: User) {
+        navigateTo(
+            fragment = UserInfoFragment(),
+            args = Bundle().apply {
+                putSerializable(MusicFeedFragment.PARAM_USER, user)
+            },
+            addToBackstack = true
         )
     }
 

@@ -13,8 +13,6 @@ import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.databinding.MainActivityBinding
 import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
-import ru.spbstu.musicservice.ui.auth.AuthFragment
-import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
 import javax.inject.Inject
 
 const val APP_STORAGE = "APP_STORAGE"
@@ -33,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+        binding.progressBar.gone()
+        binding.container.visible()
         if (savedInstanceState == null) {
             val sharedPreferences = getSharedPreferences(APP_STORAGE, Context.MODE_PRIVATE)
             val encodedLogin = sharedPreferences.getString(PARAM_AUTH_LOGIN, null)

@@ -11,4 +11,20 @@
     <string name="music_service">Музыкальный\nсервис</string>
     <string name="login_error">Неверный логин или пароль.</string>
     <string name="ok">ОК</string>
+
+    <string name="profile_label_rating">Рейтинг</string>
+    <string name="profile_label_respect">Уважение</string>
+    <string name="profile_hint_repository">Репозиторий</string>
+    <string name="profile_hint_about">О себе</string>
+    <string name="profile_hint_last_name">Фамилия</string>
+    <string name="profile_hint_first_name">Имя</string>
+
+    <string name="subscription_active">Подписка активна</string>
+    <string name="subscription_settings">Управление подпиской</string>
+    <string name="user_information_title">Информация о пользователе</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="email">Электронная почта</string>
+    <string name="gender">Пол</string>
+    <string name="birthday">Дата рождения</string>
+    <string name="country">Страна</string>
 </resources>

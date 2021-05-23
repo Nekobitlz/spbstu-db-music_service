@@ -3,6 +3,7 @@ package ru.spbstu.musicservice.ui.feed
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -15,10 +16,15 @@ import ru.spbstu.commons.*
 import ru.spbstu.commons.adapter.BaseAdapter
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.User
+import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MusicFeedFragment : BaseRecyclerFragment() {
+
+    @Inject
+    lateinit var navigator: Navigator
 
     private val viewModel: MusicFeedViewModel by viewModels()
 
@@ -26,12 +32,15 @@ class MusicFeedFragment : BaseRecyclerFragment() {
         createRecyclerAdapter() as BaseAdapter
     }
 
+    private lateinit var user: User
+
     override fun createRecyclerAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return BaseAdapter()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        user = arguments?.getSerializable(PARAM_USER) as User
         setHasOptionsMenu(true)
     }
 
@@ -40,9 +49,16 @@ class MusicFeedFragment : BaseRecyclerFragment() {
         inflater.inflate(R.menu.menu_music_feed, menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_user_settings) {
+            navigator.toUserInfo(user)
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val user = arguments?.getSerializable(PARAM_USER) as User
         val activity = activity as? AppCompatActivity
         activity?.supportActionBar?.let {
             it.setDisplayShowCustomEnabled(true)

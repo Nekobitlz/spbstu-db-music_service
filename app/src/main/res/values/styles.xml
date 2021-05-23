@@ -17,4 +17,63 @@
         <item name="android:layout_marginRight">12dp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="Profile" />
+
+    <style name="Profile.EditText" parent="Profile">
+        <item name="android:textColor">@color/default_text</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:enabled">false</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Profile.EditText.Single" parent="Profile.EditText">
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="Profile.EditText.Info" parent="Profile.EditText">
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:gravity">end</item>
+    </style>
+
+    <style name="Profile.EditText.MultiLine" parent="Profile.EditText">
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:maxLength">128</item>
+    </style>
+
+    <style name="Profile.Header" parent="Profile">
+        <item name="android:textColor">@color/default_text</item>
+    </style>
+
+    <style name="Profile.Header.Nickname" parent="Profile.Header">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginTop">16dp</item>
+    </style>
+
+    <style name="Profile.Metrics" parent="Profile">
+        <item name="android:textColor">@color/default_text</item>
+    </style>
+
+    <style name="Profile.Metrics.Label" parent="Profile.Metrics">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Profile.Metrics.Value" parent="Profile.Metrics">
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Profile.InfoItem">
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:minHeight">72dp</item>
+    </style>
 </resources>

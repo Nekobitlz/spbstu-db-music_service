@@ -1,4 +1,18 @@
 <resources>
     <dimen name="music_feed_chart_size">150dp</dimen>
     <dimen name="music_feed_cd_size">200dp</dimen>
+
+
+    <!--size elements-->
+    <dimen name="btn_round_size_40">40dp</dimen>
+    <dimen name="avatar_round_size_112">112dp</dimen>
+    <dimen name="space_maximum_72">72dp</dimen>
+    <dimen name="image_round_size_24">24dp</dimen>
+    <dimen name="item_size">72dp</dimen>
+    <dimen name="avatar_item_size">40dp</dimen>
+    <dimen name="counter_size">20dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+
+    <dimen name="action_bar_and_status_bar_height">81dp</dimen>
+    <dimen name="status_bar_height">28dp</dimen>
 </resources>
