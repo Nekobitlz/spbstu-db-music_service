@@ -41,4 +41,5 @@
     <string name="female">Женщина</string>
     <string name="register_success">Вы успешно зарегистрировались!</string>
     <string name="register_error">Не удалось создать пользователя</string>
+    <string name="no_payments_error">У вас пока что нет платежей!</string>
 </resources>

@@ -12,18 +12,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import ru.spbstu.commons.lazyUnsychronized
 import ru.spbstu.musicservice.R
-import ru.spbstu.musicservice.data.Gender
-import ru.spbstu.musicservice.data.User
-import ru.spbstu.musicservice.data.UserType
+import ru.spbstu.musicservice.data.*
 import ru.spbstu.musicservice.databinding.FragmentRegisterBinding
 import ru.spbstu.musicservice.ui.State
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment(R.layout.fragment_register) {
 
     private val binding: FragmentRegisterBinding by viewBinding()
     private val viewModel: RegisterViewModel by viewModels()
+
+    private val countries by lazyUnsychronized {
+        BufferedReader(InputStreamReader(resources.openRawResource(R.raw.countries))).readLines()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +49,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val country = binding.spinnerCountry.editableText.toString()
         when (item.itemId) {
             R.id.register -> viewModel.onRegisterClick(User(
                 "",
@@ -57,6 +63,8 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                     Gender("2", getString(R.string.female))
                 else Gender("1", getString(R.string.male)),
                 UserType("1", "Пользователь"),
+                Subscription("1", 1000, "2021-05-24", "2021-05-24"),
+                Country((countries.indexOf(country) + 1).toString(), country)
             ), binding.etPassword.text.toString())
             android.R.id.home -> activity?.onBackPressed()
         }
@@ -66,12 +74,19 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val items = arrayOf(getString(R.string.male), getString(R.string.female))
-        val adapter = ArrayAdapter(
+        val genderAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             items
         )
-        binding.spinnerGender.setAdapter(adapter)
+        binding.spinnerGender.setAdapter(genderAdapter)
+        val countriesAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            countries
+        )
+        binding.spinnerCountry.setAdapter(countriesAdapter)
+
         viewModel.userState.observe(viewLifecycleOwner) {
             when (it) {
                 is State.Success -> {

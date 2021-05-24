@@ -88,8 +88,8 @@ class DatabaseRepository @Inject constructor(
 
     fun insertUser(user: User, password: String) {
         val query =
-            "INSERT INTO db.users (first_name, second_name, password, email, birthday, phone_number, gender_id, user_type_id) " +
-                    "VALUES ('${user.firstName}', '${user.secondName}', '${password}', '${user.email}', '${user.birthday}', '${user.phoneNumber}', '${user.gender.id}', '${user.userType.id}')"
+            "INSERT INTO db.users (first_name, second_name, password, email, birthday, phone_number, gender_id, user_type_id, subscription_id, country_id) " +
+                    "VALUES ('${user.firstName}', '${user.secondName}', '${password}', '${user.email}', '${user.birthday}', '${user.phoneNumber}', '${user.gender.id}', '${user.userType.id}', '${user.subscription.id}', '${user.country.id}')"
         database.insert(query)
     }
 
@@ -120,16 +120,16 @@ class DatabaseRepository @Inject constructor(
                     resultSet.getString("user_type_id"),
                     resultSet.getString("type"),
                 ),
-                subscription = if (resultSet.getString("subscription_id") != null) Subscription(
+                subscription = Subscription(
                     resultSet.getString("subscription_id"),
                     resultSet.getInt("price"),
                     resultSet.getString("start_date"),
                     resultSet.getString("end_date"),
-                ) else null,
-                country = if (resultSet.getString("country_id") != null) Country(
+                ),
+                country = Country(
                     resultSet.getString("country_id"),
                     resultSet.getString("country_name"),
-                ) else null,
+                ),
             )
         }
         return null

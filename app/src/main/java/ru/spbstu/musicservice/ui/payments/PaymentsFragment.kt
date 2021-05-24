@@ -62,7 +62,7 @@ class PaymentsFragment : BaseRecyclerFragment() {
                     showData()
                     adapter.submitList(it.item as List<BaseAdapterItem<RecyclerView.ViewHolder>>)
                 }
-                is State.Error -> showError("У вас пока что нет платежей!", null)
+                is State.Error -> showError(getString(R.string.no_payments_error), null)
             }
         }
     }
