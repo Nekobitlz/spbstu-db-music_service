@@ -1,4 +1,4 @@
-package ru.spbstu.musicservice.ui.charts
+package ru.spbstu.musicservice.ui.playlists
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -11,18 +11,21 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.commons.BaseRecyclerFragment
 import ru.spbstu.commons.DimenUtils
-import ru.spbstu.commons.GridSpacingItemDecoration
+import ru.spbstu.commons.DividerItemDecorator
 import ru.spbstu.commons.adapter.BaseAdapter
 import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.commons.lazyUnsychronized
 import ru.spbstu.musicservice.R
-import ru.spbstu.musicservice.data.*
+import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.ui.State
+import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
 
 @AndroidEntryPoint
-class ChartsFragment : BaseRecyclerFragment() {
+class PlaylistsFragment : BaseRecyclerFragment() {
 
-    private val viewModel: ChartsViewModel by viewModels()
+    private val viewModel: PlaylistsViewModel by viewModels()
+
+    private lateinit var user: User
 
     override val adapter: BaseAdapter by lazyUnsychronized {
         createRecyclerAdapter() as BaseAdapter
@@ -32,19 +35,16 @@ class ChartsFragment : BaseRecyclerFragment() {
         return BaseAdapter()
     }
 
-    override fun createRecyclerLayoutManager(): LinearLayoutManager {
-        return GridLayoutManager(context, 2)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        user = arguments?.getSerializable(MusicFeedFragment.PARAM_USER) as User
         val activity = activity as? AppCompatActivity
         activity?.supportActionBar?.let {
             it.setDisplayShowCustomEnabled(false)
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)
             it.setHomeButtonEnabled(true)
-            it.title = resources.getString(R.string.best_charts)
+            it.title = resources.getString(R.string.my_playlists)
         }
     }
 
@@ -57,9 +57,9 @@ class ChartsFragment : BaseRecyclerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.addItemDecoration(
-            GridSpacingItemDecoration(DimenUtils.dpToPixels(context, 26f).toInt(), true)
-        )
+        if (savedInstanceState == null) {
+            viewModel.loadPlaylists(user)
+        }
         viewModel.items.observe(viewLifecycleOwner) {
             when (it) {
                 is State.Loading -> showLoading()
@@ -73,6 +73,6 @@ class ChartsFragment : BaseRecyclerFragment() {
     }
 
     override fun onRefresh() {
-        viewModel.onRefresh()
+        viewModel.onRefresh(user)
     }
 }

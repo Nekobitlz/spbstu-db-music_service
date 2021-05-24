@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/music_feed_cd_size"
     android:layout_height="@dimen/music_feed_cd_size"
+    android:layout_gravity="center"
     android:layout_marginHorizontal="6dp"
     android:orientation="vertical">
 

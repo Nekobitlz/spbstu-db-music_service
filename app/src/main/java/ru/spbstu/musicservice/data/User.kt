@@ -1,7 +1,5 @@
 package ru.spbstu.musicservice.data
 
-import java.io.Serializable
-
 data class User(
     val id: String,
     val firstName: String,
@@ -14,4 +12,4 @@ data class User(
     val userType: UserType,
     val subscription: Subscription,
     val country: Country,
-) : Serializable
+) : Entity()

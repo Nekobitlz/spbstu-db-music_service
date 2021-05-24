@@ -6,4 +6,4 @@ data class Chart(
     val startDate: String,
     val endDate: String,
     val version: Int,
-)
+) : Entity()

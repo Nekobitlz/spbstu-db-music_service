@@ -10,9 +10,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.spbstu.commons.SingleLiveData
 import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.User
+import ru.spbstu.musicservice.data.Entity
 import ru.spbstu.musicservice.repository.DatabaseRepository
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
@@ -30,7 +32,7 @@ class MusicFeedViewModel @Inject constructor(
     val items: LiveData<State<List<BaseAdapterItem<RecyclerView.ViewHolder>>>>
         get() = _items
 
-    private val _navigationEvent = MutableLiveData<NavigationEvent>()
+    private val _navigationEvent = SingleLiveData<NavigationEvent>()
     val navigationEvent: LiveData<NavigationEvent>
         get() = _navigationEvent
 
@@ -46,7 +48,8 @@ class MusicFeedViewModel @Inject constructor(
                                 R.id.view_type_music_feed_cds,
                                 it.id,
                                 it.name,
-                                rating = it.rating
+                                rating = it.rating,
+                                entity = it,
                             )
                         }
                         .also {
@@ -64,7 +67,8 @@ class MusicFeedViewModel @Inject constructor(
                             BaseMusicFeedRecycleItem(
                                 R.id.view_type_music_feed_charts,
                                 it.id,
-                                it.name
+                                it.name,
+                                entity = it,
                             )
                         }
                         .also {
@@ -84,7 +88,8 @@ class MusicFeedViewModel @Inject constructor(
                             BaseMusicFeedRecycleItem(
                                 R.id.view_type_music_feed_playlists,
                                 it.id,
-                                it.name
+                                it.name,
+                                entity = it,
                             )
                         }
                         .also {
@@ -93,7 +98,7 @@ class MusicFeedViewModel @Inject constructor(
                                     R.string.my_playlists,
                                     R.dimen.title_spacing_12,
                                     onClick = {
-                                        _navigationEvent.value = NavigationEvent(type = NavigationType.PLAYLIST_MORE)
+                                        _navigationEvent.value = NavigationEvent(type = NavigationType.PLAYLIST_MORE, )
                                     }
                                 )
                                 list += PagerMusicFeedItem(it, this@MusicFeedViewModel)

@@ -6,4 +6,4 @@ data class Cd(
     val releaseDate: String,
     val rating: Float,
     val length: Float,
-)
+) : Entity()

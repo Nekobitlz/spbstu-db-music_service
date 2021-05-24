@@ -1,4 +1,4 @@
-package ru.spbstu.musicservice.ui.charts
+package ru.spbstu.musicservice.ui.cds
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -16,13 +16,12 @@ import ru.spbstu.commons.adapter.BaseAdapter
 import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.commons.lazyUnsychronized
 import ru.spbstu.musicservice.R
-import ru.spbstu.musicservice.data.*
 import ru.spbstu.musicservice.ui.State
 
 @AndroidEntryPoint
-class ChartsFragment : BaseRecyclerFragment() {
+class CdsFragment : BaseRecyclerFragment() {
 
-    private val viewModel: ChartsViewModel by viewModels()
+    private val viewModel: CdsViewModel by viewModels()
 
     override val adapter: BaseAdapter by lazyUnsychronized {
         createRecyclerAdapter() as BaseAdapter
@@ -44,7 +43,7 @@ class ChartsFragment : BaseRecyclerFragment() {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)
             it.setHomeButtonEnabled(true)
-            it.title = resources.getString(R.string.best_charts)
+            it.title = resources.getString(R.string.best_cd)
         }
     }
 
@@ -58,7 +57,7 @@ class ChartsFragment : BaseRecyclerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.addItemDecoration(
-            GridSpacingItemDecoration(DimenUtils.dpToPixels(context, 26f).toInt(), true)
+            GridSpacingItemDecoration(DimenUtils.dpToPixels(context, 8f).toInt(), false)
         )
         viewModel.items.observe(viewLifecycleOwner) {
             when (it) {

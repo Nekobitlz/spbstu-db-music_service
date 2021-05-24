@@ -8,11 +8,15 @@ import androidx.fragment.app.FragmentManager
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import ru.spbstu.musicservice.R
+import ru.spbstu.musicservice.data.Playlist
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.ui.auth.AuthFragment
+import ru.spbstu.musicservice.ui.cds.CdsFragment
 import ru.spbstu.musicservice.ui.charts.ChartsFragment
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
 import ru.spbstu.musicservice.ui.payments.PaymentsFragment
+import ru.spbstu.musicservice.ui.playlists.PlaylistFragment
+import ru.spbstu.musicservice.ui.playlists.PlaylistsFragment
 import ru.spbstu.musicservice.ui.register.RegisterFragment
 import ru.spbstu.musicservice.ui.user_info.UserInfoFragment
 import java.lang.ref.WeakReference
@@ -20,7 +24,7 @@ import javax.inject.Inject
 
 @ActivityScoped
 class Navigator @Inject constructor(
-    @ActivityContext activityContext: Context
+    @ActivityContext activityContext: Context,
 ) {
 
     private val activityReference = WeakReference<AppCompatActivity>(
@@ -54,7 +58,11 @@ class Navigator @Inject constructor(
     }
 
     fun toCharts() {
-        navigateTo(ChartsFragment())
+        navigateTo(ChartsFragment(), addToBackstack = true)
+    }
+
+    fun toCds() {
+        navigateTo(CdsFragment(), addToBackstack = true)
     }
 
     fun toUserInfo(user: User) {
@@ -71,7 +79,27 @@ class Navigator @Inject constructor(
         navigateTo(RegisterFragment(), addToBackstack = true)
     }
 
-    private fun navigateTo(
+    fun toPlaylists(user: User) {
+        navigateTo(
+            fragment = PlaylistsFragment(),
+            args = Bundle().apply {
+                putSerializable(MusicFeedFragment.PARAM_USER, user)
+            },
+            addToBackstack = true
+        )
+    }
+
+    fun toPlaylist(playlist: Playlist) {
+        navigateTo(
+            fragment = PlaylistFragment(),
+            args = Bundle().apply {
+                putSerializable(MusicFeedFragment.PARAM_PLAYLIST, playlist)
+            },
+            addToBackstack = true
+        )
+    }
+
+    fun navigateTo(
         fragment: Fragment,
         args: Bundle? = null,
         addToBackstack: Boolean = false,

@@ -20,11 +20,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.commons.*
 import ru.spbstu.commons.adapter.BaseAdapter
 import ru.spbstu.musicservice.R
+import ru.spbstu.musicservice.data.Playlist
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
+import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedPlaylistsViewHolder
 import ru.spbstu.musicservice.ui.main.APP_STORAGE
 import ru.spbstu.musicservice.ui.main.PARAM_AUTH_USERS_COUNT
+import ru.spbstu.musicservice.ui.playlists.PlaylistFragment
+import ru.spbstu.musicservice.ui.playlists.PlaylistsFragment
+import ru.spbstu.musicservice.ui.songs.FragmentWithSongs
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -121,10 +126,10 @@ class MusicFeedFragment : BaseRecyclerFragment() {
             when (it.type) {
                 NavigationType.CHART -> TODO()
                 NavigationType.CD -> TODO()
-                NavigationType.PLAYLIST -> TODO()
+                NavigationType.PLAYLIST -> navigator.toPlaylist(it.item?.entity as? Playlist ?: return@observe)
                 NavigationType.CHART_MORE -> navigator.toCharts()
-                NavigationType.CD_MORE -> TODO()
-                NavigationType.PLAYLIST_MORE -> TODO()
+                NavigationType.CD_MORE -> navigator.toCds()
+                NavigationType.PLAYLIST_MORE -> navigator.toPlaylists(user)
             }
         }
     }
@@ -135,5 +140,6 @@ class MusicFeedFragment : BaseRecyclerFragment() {
 
     companion object {
         const val PARAM_USER = "PARAM_USER"
+        const val PARAM_PLAYLIST = "PARAM_PLAYLIST"
     }
 }

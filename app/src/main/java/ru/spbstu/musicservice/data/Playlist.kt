@@ -5,4 +5,4 @@ data class Playlist(
     val name: String,
     val updateDate: String,
     val playbacksCount: Int,
-)
+) : Entity()
