@@ -1,5 +1,6 @@
 package ru.spbstu.musicservice.ui.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,6 +36,7 @@ class MainViewModel @Inject constructor(
                     }
                     _userState.postValue(state)
                 } catch (t: Throwable) {
+                    Log.e("ERROR", t.message.toString())
                     _userState.postValue(State.Error(t))
                 }
             }

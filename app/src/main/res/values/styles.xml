@@ -20,6 +20,19 @@
 
     <style name="Profile" />
 
+    <style name="RegisterEditText">
+        <item name="android:textColor">@color/default_text</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColorHint">@color/pink_light</item>
+    </style>
+
+    <style name="RegisterInput">
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="boxStrokeColor">@color/pink_dark</item>
+        <item name="helperTextTextColor">@color/pink_dark</item>
+        <item name="hintTextColor">@color/pink_dark</item>
+    </style>
+
     <style name="Profile.EditText" parent="Profile">
         <item name="android:textColor">@color/default_text</item>
         <item name="android:paddingTop">4dp</item>

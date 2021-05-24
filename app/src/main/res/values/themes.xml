@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <item name="android:windowBackground">@color/default_background</item>
+        <item name="android:actionMenuTextColor">@color/pink_dark</item>
         <!-- Customize your theme here. -->
     </style>
 

@@ -13,6 +13,7 @@ import ru.spbstu.musicservice.ui.auth.AuthFragment
 import ru.spbstu.musicservice.ui.charts.ChartsFragment
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
 import ru.spbstu.musicservice.ui.payments.PaymentsFragment
+import ru.spbstu.musicservice.ui.register.RegisterFragment
 import ru.spbstu.musicservice.ui.user_info.UserInfoFragment
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -64,6 +65,10 @@ class Navigator @Inject constructor(
             },
             addToBackstack = true
         )
+    }
+
+    fun toRegister() {
+        navigateTo(RegisterFragment(), addToBackstack = true)
     }
 
     private fun navigateTo(

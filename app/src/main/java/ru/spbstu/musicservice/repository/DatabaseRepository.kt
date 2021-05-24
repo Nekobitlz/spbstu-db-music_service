@@ -4,7 +4,7 @@ import ru.spbstu.musicservice.data.*
 import javax.inject.Inject
 
 class DatabaseRepository @Inject constructor(
-    private val database: Database
+    private val database: Database,
 ) {
 
     fun getPlaylists(user: User, count: Int = 10): List<Playlist> {
@@ -70,7 +70,7 @@ class DatabaseRepository @Inject constructor(
         val resultSet = database.select(
             "SELECT * FROM db.payments " +
                     "WHERE payments_date " +
-                    "BETWEEN '${user.subscription.startDate}' AND '${user.subscription.endDate}'" +
+                    "BETWEEN '${user.subscription?.startDate}' AND '${user.subscription?.endDate}' " +
                     "LIMIT $count"
         ) ?: return listOf()
         val result = mutableListOf<Payment>()
@@ -86,13 +86,20 @@ class DatabaseRepository @Inject constructor(
         return result
     }
 
+    fun insertUser(user: User, password: String) {
+        val query =
+            "INSERT INTO db.users (first_name, second_name, password, email, birthday, phone_number, gender_id, user_type_id) " +
+                    "VALUES ('${user.firstName}', '${user.secondName}', '${password}', '${user.email}', '${user.birthday}', '${user.phoneNumber}', '${user.gender.id}', '${user.userType.id}')"
+        database.insert(query)
+    }
+
     fun getUser(login: String, password: String): User? {
         var query = "SELECT * " +
                 "FROM db.users " +
-                "INNER JOIN db.gender ON users.gender_id = gender.id " +
-                "INNER JOIN db.subscription ON users.subscription_id = subscription.id " +
-                "INNER JOIN db.country ON users.country_id = country.id " +
-                "INNER JOIN db.user_type ON users.user_type_id = user_type.id " +
+                "LEFT JOIN db.gender ON users.gender_id = gender.id " +
+                "LEFT JOIN db.subscription ON users.subscription_id = subscription.id " +
+                "LEFT JOIN db.country ON users.country_id = country.id " +
+                "LEFT JOIN db.user_type ON users.user_type_id = user_type.id " +
                 "WHERE password = '$password' AND "
         query += (if (login.matches(Regex("[0-9]+"))) "phone_number = '$login';" else "email = '$login';")
         val resultSet = database.select(query) ?: return null
@@ -113,16 +120,16 @@ class DatabaseRepository @Inject constructor(
                     resultSet.getString("user_type_id"),
                     resultSet.getString("type"),
                 ),
-                subscription = Subscription(
+                subscription = if (resultSet.getString("subscription_id") != null) Subscription(
                     resultSet.getString("subscription_id"),
                     resultSet.getInt("price"),
                     resultSet.getString("start_date"),
                     resultSet.getString("end_date"),
-                ),
-                country = Country(
+                ) else null,
+                country = if (resultSet.getString("country_id") != null) Country(
                     resultSet.getString("country_id"),
                     resultSet.getString("country_name"),
-                ),
+                ) else null,
             )
         }
         return null

@@ -1,4 +1,4 @@
-package ru.spbstu.musicservice.ui.auth
+package ru.spbstu.musicservice.ui.register
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -15,29 +15,25 @@ import ru.spbstu.musicservice.ui.State
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(
+class RegisterViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository,
 ) : ViewModel() {
 
-    private val _authState = MutableLiveData<State<User>>()
-    val authState: LiveData<State<User>>
-        get() = _authState
+    private val _userState = MutableLiveData<State<User>>()
+    val userState: LiveData<State<User>>
+        get() = _userState
 
-    fun onSubmitClick(login: String, password: String) {
+    fun onRegisterClick(user: User, password: String) {
         viewModelScope.launch {
-            _authState.value = State.Loading()
+            _userState.value = State.Loading()
             withContext(Dispatchers.IO) {
                 try {
-                    val user = databaseRepository.getUser(login, password)
-                    val state = if (user == null) {
-                        State.Error(NoSuchElementException())
-                    } else {
-                        State.Success(user)
-                    }
-                    _authState.postValue(state)
+                    databaseRepository.insertUser(user, password)
+                    val state = State.Success(user)
+                    _userState.postValue(state)
                 } catch (t: Throwable) {
                     Log.e("ERROR", t.message.toString())
-                    _authState.postValue(State.Error(t))
+                    _userState.postValue(State.Error(t))
                 }
             }
         }

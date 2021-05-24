@@ -1,5 +1,6 @@
 package ru.spbstu.musicservice.ui.feed
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -104,6 +105,7 @@ class MusicFeedViewModel @Inject constructor(
                         _items.postValue(State.Success(list.toList() as List<BaseAdapterItem<RecyclerView.ViewHolder>>))
                     }
                 } catch (t: Throwable) {
+                    Log.e("ERROR", t.message.toString())
                     _items.postValue(State.Error(t))
                 }
             }

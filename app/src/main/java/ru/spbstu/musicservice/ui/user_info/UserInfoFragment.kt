@@ -50,10 +50,10 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
         binding.etEmail.setText(user.email, TextView.BufferType.EDITABLE)
         binding.etBirthday.setText(user.birthday, TextView.BufferType.EDITABLE)
         binding.etGender.setText(user.gender.gender, TextView.BufferType.EDITABLE)
-        binding.etCountry.setText(user.country.name, TextView.BufferType.EDITABLE)
+        binding.etCountry.setText(user.country?.name, TextView.BufferType.EDITABLE)
 
-        binding.itemSubscription.tvStartDate.text = user.subscription.startDate
-        binding.itemSubscription.tvEndDate.text = user.subscription.endDate
+        binding.itemSubscription.tvStartDate.text = user.subscription?.startDate
+        binding.itemSubscription.tvEndDate.text = user.subscription?.endDate
         binding.itemSubscription.btnGoToSubscription.setOnClickListener {
             navigator.toPayments(user)
         }

@@ -50,12 +50,12 @@ abstract class BaseRecyclerFragment : Fragment(R.layout.fragment_base_recycler) 
         recyclerBinding.list.visible()
     }
 
-    protected open fun showError() {
+    protected open fun showError(
+        text: String = resources.getString(R.string.default_error),
+        onRetryClick: (() -> Unit)? = { onRefresh() },
+    ) {
         recyclerBinding.swipeRefresh.isRefreshing = false
-        recyclerBinding.emptyView.state = EmptyViewState.Error(
-            resources.getString(R.string.default_error),
-            onRetryClick = { onRefresh() }
-        )
+        recyclerBinding.emptyView.state = EmptyViewState.Error(text, onRetryClick)
         recyclerBinding.list.gone()
     }
 

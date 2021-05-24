@@ -94,13 +94,9 @@ class MusicFeedFragment : BaseRecyclerFragment() {
                         list.add(user)
                     }
                     val items = list
-                        .map {
-                            "${it.firstName} ${it.secondName}"
-                        }
+                        .map { "${it.firstName} ${it.secondName}" }
                         .toMutableList()
-                        .apply {
-                            add(resources.getString(R.string.add_user))
-                        }
+                        .apply { add(resources.getString(R.string.add_user)) }
                     listItems(items = items) { dialog, index, text ->
                         if (items.size - 1 == index) {
                             navigator.toAuth(true)

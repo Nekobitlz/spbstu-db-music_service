@@ -59,4 +59,8 @@ class Database(
             Log.d(logTag, e.message ?: "")
         }
     }
+
+    fun insert(query: String) {
+        connection?.createStatement()?.execute(query)
+    }
 }

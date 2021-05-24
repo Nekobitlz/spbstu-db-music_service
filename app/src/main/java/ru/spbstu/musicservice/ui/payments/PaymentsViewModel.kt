@@ -1,5 +1,6 @@
 package ru.spbstu.musicservice.ui.payments
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -40,6 +41,7 @@ class PaymentsViewModel @Inject constructor(
                         _items.postValue(State.Success(list.toList()))
                     }
                 } catch (t: Throwable) {
+                    Log.e("ERROR", t.message.toString())
                     _items.postValue(State.Error(t))
                 }
             }

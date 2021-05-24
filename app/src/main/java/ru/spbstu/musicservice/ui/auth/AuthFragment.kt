@@ -73,6 +73,9 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 binding.etPassword.text.toString()
             )
         }
+        binding.btnRegister.setOnClickListener {
+            navigator.toRegister()
+        }
     }
 
     private fun saveToken(user: User) {

@@ -12,6 +12,6 @@ data class User(
     val email: String,
     val gender: Gender,
     val userType: UserType,
-    val subscription: Subscription,
-    val country: Country,
+    val subscription: Subscription? = null,
+    val country: Country? = null,
 ) : Serializable

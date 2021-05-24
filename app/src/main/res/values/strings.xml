@@ -35,4 +35,10 @@
     <string name="payments">Платежи</string>
     <string name="choose_account">Выберите аккаунт</string>
     <string name="add_user">Добавить новый аккаунт</string>
+    <string name="registration">Регистрация</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="male">Мужчина</string>
+    <string name="female">Женщина</string>
+    <string name="register_success">Вы успешно зарегистрировались!</string>
+    <string name="register_error">Не удалось создать пользователя</string>
 </resources>
