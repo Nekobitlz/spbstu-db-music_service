@@ -2,10 +2,11 @@ package ru.spbstu.musicservice.data
 
 import ru.spbstu.musicservice.Utils
 
-data class Playlist(
+data class Artist(
     val id: String,
     val name: String,
-    val updateDate: String,
-    val playbacksCount: Int,
+    val description: String,
+    val rating: Float,
     val imageUrl: String = Utils.getRandomImage(),
-) : Entity()
+    val role: Role?,
+): Entity()

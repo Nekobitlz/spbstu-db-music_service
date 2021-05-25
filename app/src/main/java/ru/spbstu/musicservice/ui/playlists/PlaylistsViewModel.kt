@@ -8,10 +8,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.spbstu.commons.SingleLiveData
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.repository.DatabaseRepository
 import ru.spbstu.musicservice.ui.State
+import ru.spbstu.musicservice.ui.feed.NavigationEvent
+import ru.spbstu.musicservice.ui.feed.NavigationType
 import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
 import ru.spbstu.musicservice.ui.feed.item.BaseMusicFeedRecycleItem
 import javax.inject.Inject
@@ -25,6 +28,10 @@ class PlaylistsViewModel @Inject constructor(
     val items: LiveData<State<List<PlaylistItem>>>
         get() = _items
 
+    private val _navigationEvent = SingleLiveData<NavigationEvent>()
+    val navigationEvent: LiveData<NavigationEvent>
+        get() = _navigationEvent
+
     fun loadPlaylists(user: User) {
         viewModelScope.launch {
             _items.postValue(State.Loading())
@@ -37,7 +44,8 @@ class PlaylistsViewModel @Inject constructor(
                                 BaseMusicFeedRecycleItem(
                                     R.id.view_type_music_feed_playlists,
                                     it.id,
-                                    it.name
+                                    it.name,
+                                    entity = it
                                 ), this@PlaylistsViewModel
                             )
                         }.also {
@@ -59,15 +67,7 @@ class PlaylistsViewModel @Inject constructor(
         loadPlaylists(user)
     }
 
-    override fun onChartClick(item: BaseMusicFeedRecycleItem) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onCdClick(item: BaseMusicFeedRecycleItem) {
-        TODO("Not yet implemented")
-    }
-
     override fun onPlaylistClick(item: BaseMusicFeedRecycleItem) {
-        TODO("Not yet implemented")
+        _navigationEvent.value = NavigationEvent(item, NavigationType.PLAYLIST)
     }
 }

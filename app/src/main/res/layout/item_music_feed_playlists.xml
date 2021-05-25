@@ -19,6 +19,22 @@
         app:pressedStateOverlayImage="?selectableItemBackground"
         app:roundedCornerRadius="8dp" />
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:background="@drawable/top_gradient"
+        app:layout_constraintEnd_toEndOf="@id/iv_cover"
+        app:layout_constraintStart_toStartOf="@id/iv_cover"
+        app:layout_constraintTop_toTopOf="@id/iv_cover" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:background="@drawable/bottom_gradient"
+        app:layout_constraintBottom_toBottomOf="@id/iv_cover"
+        app:layout_constraintEnd_toEndOf="@id/iv_cover"
+        app:layout_constraintStart_toStartOf="@id/iv_cover" />
+
     <TextView
         android:id="@+id/tv_playlist"
         style="@style/Text"

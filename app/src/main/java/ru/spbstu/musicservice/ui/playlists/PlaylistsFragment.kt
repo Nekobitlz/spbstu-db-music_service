@@ -5,23 +5,26 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.commons.BaseRecyclerFragment
-import ru.spbstu.commons.DimenUtils
-import ru.spbstu.commons.DividerItemDecorator
 import ru.spbstu.commons.adapter.BaseAdapter
 import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.commons.lazyUnsychronized
 import ru.spbstu.musicservice.R
+import ru.spbstu.musicservice.data.Playlist
 import ru.spbstu.musicservice.data.User
+import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
+import ru.spbstu.musicservice.ui.feed.NavigationType
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PlaylistsFragment : BaseRecyclerFragment() {
+
+    @Inject
+    lateinit var navigator: Navigator
 
     private val viewModel: PlaylistsViewModel by viewModels()
 
@@ -68,6 +71,11 @@ class PlaylistsFragment : BaseRecyclerFragment() {
                     adapter.submitList(it.item as List<BaseAdapterItem<RecyclerView.ViewHolder>>)
                 }
                 is State.Error -> showError()
+            }
+        }
+        viewModel.navigationEvent.observe(viewLifecycleOwner) {
+            when (it.type) {
+                NavigationType.PLAYLIST -> navigator.toPlaylist(it.item?.entity as? Playlist ?: return@observe)
             }
         }
     }

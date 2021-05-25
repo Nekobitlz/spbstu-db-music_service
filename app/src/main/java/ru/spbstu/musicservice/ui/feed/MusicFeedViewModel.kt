@@ -89,6 +89,7 @@ class MusicFeedViewModel @Inject constructor(
                                 R.id.view_type_music_feed_playlists,
                                 it.id,
                                 it.name,
+                                imageUrl = it.imageUrl,
                                 entity = it,
                             )
                         }
@@ -98,7 +99,7 @@ class MusicFeedViewModel @Inject constructor(
                                     R.string.my_playlists,
                                     R.dimen.title_spacing_12,
                                     onClick = {
-                                        _navigationEvent.value = NavigationEvent(type = NavigationType.PLAYLIST_MORE, )
+                                        _navigationEvent.value = NavigationEvent(type = NavigationType.PLAYLIST_MORE)
                                     }
                                 )
                                 list += PagerMusicFeedItem(it, this@MusicFeedViewModel)

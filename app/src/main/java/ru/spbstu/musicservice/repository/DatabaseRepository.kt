@@ -1,6 +1,7 @@
 package ru.spbstu.musicservice.repository
 
 import ru.spbstu.musicservice.data.*
+import java.sql.ResultSet
 import javax.inject.Inject
 
 class DatabaseRepository @Inject constructor(
@@ -70,7 +71,7 @@ class DatabaseRepository @Inject constructor(
         val resultSet = database.select(
             "SELECT * FROM db.payments " +
                     "WHERE payments_date " +
-                    "BETWEEN '${user.subscription?.startDate}' AND '${user.subscription?.endDate}' " +
+                    "BETWEEN '${user.subscription.startDate}' AND '${user.subscription.endDate}' " +
                     "LIMIT $count"
         ) ?: return listOf()
         val result = mutableListOf<Payment>()
@@ -133,5 +134,73 @@ class DatabaseRepository @Inject constructor(
             )
         }
         return null
+    }
+
+    fun getPlaylistSongs(playlist: Playlist, count: Int): List<Song> {
+        val query = """SELECT song.id,
+       song.name  as song_name,
+       song.length,
+       song.release_date,
+       song.rating,
+       song.album_position,
+       song.playbacks_count,
+       song.genre_id,
+       genre.name as genre_name,
+       ar1.id as artist_id,
+       ar1.name as artist_name,
+       ar1.description,
+       ar1.rating as artist_rating,
+       role.id as role_id,
+       role.name as role_name
+FROM db.playlist
+         INNER JOIN db.playlist_song ON playlist.id = playlist_song.playlist_id
+         LEFT JOIN db.song ON playlist_song.song_id = song.id
+         LEFT JOIN db.genre ON genre.id = song.genre_id
+         LEFT JOIN db.song_artist ON song_artist.song_id = song.id
+         LEFT JOIN db.artist as ar1 ON song_artist.artist_id = ar1.id
+         LEFT JOIN db.role ON ar1.role_id = role.id
+         WHERE db.playlist.id = '${playlist.id}' LIMIT $count;
+         """
+        val resultSet = database.select(query) ?: return listOf()
+        val list = mutableListOf<Song>()
+        while (resultSet.next()) {
+            val song = Song(
+                id = resultSet.getString("id"),
+                name = resultSet.getString("song_name"),
+                length = resultSet.getFloat("length"),
+                releaseDate = resultSet.getString("release_date"),
+                rating = resultSet.getFloat("rating"),
+                albumPosition = resultSet.getInt("album_position"),
+                playbacksCount = resultSet.getInt("playbacks_count"),
+                genre = if (resultSet.getString("genre_id") != null) Genre(
+                    resultSet.getString("genre_id"),
+                    resultSet.getString("genre_name")
+                ) else null,
+                artist = getArtistParser(resultSet)
+                /*album = Album(
+                    id = resultSet.getString("album.id"),
+                    name = resultSet.getString("album.name"),
+                    length = resultSet.getFloat("album.length"),
+                    releaseDate = resultSet.getString("album.release_date"),
+                    rating = resultSet.getFloat("album.rating"),
+                    playbacksCount  = resultSet.getInt("album.playbacks_count"),
+                ),*/
+            )
+            list.add(song)
+        }
+        return list
+    }
+
+    fun getArtistParser(resultSet: ResultSet): Artist? {
+        return if (resultSet.getString("artist_id") != null) Artist(
+            id = resultSet.getString("artist_id"),
+            name = resultSet.getString("artist_name"),
+            description = resultSet.getString("description"),
+            rating = resultSet.getFloat("artist_rating"),
+            role = if (resultSet.getString("role_id") != null) Role(
+                resultSet.getString("role_id"),
+                resultSet.getString("role_name")
+            ) else null,
+        ) else null
     }
 }
