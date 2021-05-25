@@ -50,7 +50,7 @@ class DatabaseRepository @Inject constructor(
 
     fun getCharts(count: Int = 10): List<Chart> {
         val resultSet = database.select(
-            "SELECT * FROM db.chart ORDER BY chart_start_date DESC LIMIT $count"
+            "SELECT * FROM db.chart ORDER BY id LIMIT $count"
         ) ?: return listOf()
         val result = mutableListOf<Chart>()
         while (resultSet.next()) {
@@ -229,6 +229,40 @@ FROM db.cd
          LEFT JOIN db.artist as ar1 ON song_artist.artist_id = ar1.id
          LEFT JOIN db.role ON ar1.role_id = role.id
          WHERE cd.id = '${cd.id}' LIMIT $count;
+         """
+        val resultSet = database.select(query) ?: return listOf()
+        val list = mutableListOf<Song>()
+        while (resultSet.next()) {
+            val song = getSongParser(resultSet)
+            list.add(song)
+        }
+        return list
+    }
+
+    fun getChartSongs(chart: Chart, count: Int = 10): List<Song> {
+        val query = """SELECT song.id,
+       song.name  as song_name,
+       song.length,
+       song.release_date,
+       song.rating,
+       song.album_position,
+       song.playbacks_count,
+       song.genre_id,
+       genre.name as genre_name,
+       ar1.id as artist_id,
+       ar1.name as artist_name,
+       ar1.description,
+       ar1.rating as artist_rating,
+       role.id as role_id,
+       role.name as role_name
+FROM db.chart
+         INNER JOIN db.chart_entry ON chart.id = chart_entry.chart_id
+    INNER JOIN db.song ON chart_entry.song_id = song.id
+         LEFT JOIN db.genre ON genre.id = song.genre_id
+         LEFT JOIN db.song_artist ON song_artist.song_id = song.id
+         LEFT JOIN db.artist as ar1 ON song_artist.artist_id = ar1.id
+         LEFT JOIN db.role ON ar1.role_id = role.id
+WHERE chart.id = '${chart.id}' LIMIT $count;
          """
         val resultSet = database.select(query) ?: return listOf()
         val list = mutableListOf<Song>()

@@ -9,11 +9,13 @@ import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.Cd
+import ru.spbstu.musicservice.data.Chart
 import ru.spbstu.musicservice.data.Playlist
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.ui.auth.AuthFragment
 import ru.spbstu.musicservice.ui.cds.CdFragment
 import ru.spbstu.musicservice.ui.cds.CdsFragment
+import ru.spbstu.musicservice.ui.charts.ChartFragment
 import ru.spbstu.musicservice.ui.charts.ChartsFragment
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
 import ru.spbstu.musicservice.ui.payments.PaymentsFragment
@@ -106,6 +108,16 @@ class Navigator @Inject constructor(
             fragment = CdFragment(),
             args = Bundle().apply {
                 putSerializable(MusicFeedFragment.PARAM_CD, cd)
+            },
+            addToBackstack = true
+        )
+    }
+
+    fun toChart(chart: Chart) {
+        navigateTo(
+            fragment = ChartFragment(),
+            args = Bundle().apply {
+                putSerializable(MusicFeedFragment.PARAM_CHART, chart)
             },
             addToBackstack = true
         )

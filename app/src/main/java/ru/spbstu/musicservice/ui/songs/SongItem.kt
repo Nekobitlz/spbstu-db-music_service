@@ -11,7 +11,7 @@ import ru.spbstu.musicservice.databinding.ItemSongBinding
 import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
 
 class SongItem(
-    private val item: Song,
+    val item: Song,
     private val musicFeedClickListener: MusicFeedClickListener,
 ) : BaseAdapterItem<SongItemViewHolder>() {
 

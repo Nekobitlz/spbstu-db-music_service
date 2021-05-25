@@ -44,4 +44,6 @@
     <string name="playlist_no_songs">Похоже, в этом плейлисте нет песен, добавьте их прямо сейчас!</string>
     <string name="no_payments_error">У вас пока что нет платежей!</string>
     <string name="cd">CD</string>
+    <string name="share">Поделиться</string>
+    <string name="chart">Чарт</string>
 </resources>

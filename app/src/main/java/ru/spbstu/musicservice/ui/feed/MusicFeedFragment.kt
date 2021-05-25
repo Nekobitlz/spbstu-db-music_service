@@ -21,6 +21,7 @@ import ru.spbstu.commons.*
 import ru.spbstu.commons.adapter.BaseAdapter
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.Cd
+import ru.spbstu.musicservice.data.Chart
 import ru.spbstu.musicservice.data.Playlist
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.ui.Navigator
@@ -125,7 +126,7 @@ class MusicFeedFragment : BaseRecyclerFragment() {
         })
         viewModel.navigationEvent.observe(viewLifecycleOwner) {
             when (it.type) {
-                NavigationType.CHART -> TODO()
+                NavigationType.CHART -> navigator.toChart(it.item?.entity as? Chart ?: return@observe)
                 NavigationType.CD -> navigator.toCd(it.item?.entity as? Cd ?: return@observe)
                 NavigationType.PLAYLIST -> navigator.toPlaylist(it.item?.entity as? Playlist ?: return@observe)
                 NavigationType.CHART_MORE -> navigator.toCharts()
@@ -140,6 +141,7 @@ class MusicFeedFragment : BaseRecyclerFragment() {
     }
 
     companion object {
+        const val PARAM_CHART = "PARAM_CHART"
         const val PARAM_CD = "PARAM_CD"
         const val PARAM_USER = "PARAM_USER"
         const val PARAM_PLAYLIST = "PARAM_PLAYLIST"

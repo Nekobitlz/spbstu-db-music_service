@@ -17,10 +17,16 @@ import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.commons.lazyUnsychronized
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.*
+import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
+import ru.spbstu.musicservice.ui.feed.NavigationType
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChartsFragment : BaseRecyclerFragment() {
+
+    @Inject
+    lateinit var navigator: Navigator
 
     private val viewModel: ChartsViewModel by viewModels()
 
@@ -68,6 +74,11 @@ class ChartsFragment : BaseRecyclerFragment() {
                     adapter.submitList(it.item as List<BaseAdapterItem<RecyclerView.ViewHolder>>)
                 }
                 is State.Error -> showError()
+            }
+        }
+        viewModel.navigationEvent.observe(viewLifecycleOwner) {
+            when (it.type) {
+                NavigationType.CHART -> navigator.toChart(it.item?.entity as? Chart ?: return@observe)
             }
         }
     }
