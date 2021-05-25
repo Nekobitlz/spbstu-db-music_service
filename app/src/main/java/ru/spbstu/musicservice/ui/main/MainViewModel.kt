@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.spbstu.musicservice.data.Playlist
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.repository.DatabaseRepository
 import ru.spbstu.musicservice.ui.State
@@ -22,6 +23,10 @@ class MainViewModel @Inject constructor(
     private val _userState = MutableLiveData<State<User>>()
     val userState: LiveData<State<User>>
         get() = _userState
+
+    private val _playlistState = MutableLiveData<State<Playlist>>()
+    val playlistState: LiveData<State<Playlist>>
+        get() = _playlistState
 
     fun onUserRestored(login: String, password: String) {
         viewModelScope.launch {
@@ -38,6 +43,26 @@ class MainViewModel @Inject constructor(
                 } catch (t: Throwable) {
                     Log.e("ERROR", t.message.toString())
                     _userState.postValue(State.Error(t))
+                }
+            }
+        }
+    }
+
+    fun onPlaylistRequest(playlistId: String) {
+        viewModelScope.launch {
+            _userState.value = State.Loading()
+            withContext(Dispatchers.IO) {
+                try {
+                    val playlist = databaseRepository.getPlaylist(playlistId)
+                    val state = if (playlist == null) {
+                        State.Error(NoSuchElementException())
+                    } else {
+                        State.Success(playlist)
+                    }
+                    _playlistState.postValue(state)
+                } catch (t: Throwable) {
+                    Log.e("ERROR", t.message.toString())
+                    _playlistState.postValue(State.Error(t))
                 }
             }
         }

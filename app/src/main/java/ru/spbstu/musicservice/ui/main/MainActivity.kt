@@ -1,6 +1,6 @@
 package ru.spbstu.musicservice.ui.main
 
-import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -36,33 +36,68 @@ class MainActivity : AppCompatActivity() {
         binding.progressBar.gone()
         binding.container.visible()
         if (savedInstanceState == null) {
-            val sharedPreferences = getSharedPreferences(APP_STORAGE, Context.MODE_PRIVATE)
-            val encodedLogin = sharedPreferences.getString(PARAM_AUTH_LOGIN, null)
-            val encodedPassword = sharedPreferences.getString(PARAM_AUTH_PASSWORD, null)
-            if (encodedLogin == null || encodedPassword == null) {
-                openLoginFragment()
+            val data: Uri? = intent?.data
+            if (data == null) {
+                login()
             } else {
-                val login = String(Base64.decode(encodedLogin))
-                val password = String(Base64.decode(encodedPassword))
-                viewModel.userState.observe(this) {
-                    when (it) {
-                        is State.Loading -> {
-                            binding.progressBar.visible()
-                            binding.container.gone()
-                        }
-                        is State.Success -> {
-                            binding.container.visible()
-                            binding.progressBar.gone()
-                            navigator.toMusicFeed(it.item)
-                        }
-                        is State.Error -> {
-                            openLoginFragment()
+                data.lastPathSegment?.let { playlistId ->
+                    viewModel.playlistState.observe(this) {
+                        when (it) {
+                            is State.Loading -> {
+                                showLoading()
+                            }
+                            is State.Success -> {
+                                showData()
+                                navigator.toPlaylist(it.item, false)
+                            }
+                            is State.Error -> login()
                         }
                     }
+                    viewModel.onPlaylistRequest(playlistId)
                 }
-                viewModel.onUserRestored(login, password)
             }
         }
+    }
+
+    private fun login() {
+        val sharedPreferences = getSharedPreferences(APP_STORAGE, MODE_PRIVATE)
+        val encodedLogin = sharedPreferences.getString(PARAM_AUTH_LOGIN, null)
+        val encodedPassword = sharedPreferences.getString(PARAM_AUTH_PASSWORD, null)
+        if (encodedLogin == null || encodedPassword == null) {
+            openLogin()
+        } else {
+            val login = String(Base64.decode(encodedLogin))
+            val password = String(Base64.decode(encodedPassword))
+            viewModel.userState.observe(this) {
+                when (it) {
+                    is State.Loading -> {
+                        showLoading()
+                    }
+                    is State.Success -> {
+                        showData()
+                        navigator.toMusicFeed(it.item)
+                    }
+                    is State.Error -> {
+                        openLogin()
+                    }
+                }
+            }
+            viewModel.onUserRestored(login, password)
+        }
+    }
+
+    private fun showData() {
+        binding.container.visible()
+        binding.progressBar.gone()
+    }
+
+    private fun openLogin() {
+        openLoginFragment()
+    }
+
+    private fun showLoading() {
+        binding.progressBar.visible()
+        binding.container.gone()
     }
 
     private fun openLoginFragment() {

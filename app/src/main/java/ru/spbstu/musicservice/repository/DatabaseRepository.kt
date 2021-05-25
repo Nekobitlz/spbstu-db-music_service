@@ -18,15 +18,21 @@ class DatabaseRepository @Inject constructor(
         val result = mutableListOf<Playlist>()
         while (resultSet.next()) {
             result.add(
-                Playlist(
-                    resultSet.getString("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("update_date"),
-                    resultSet.getInt("playbacks_count"),
-                )
+                getPlaylistParser(resultSet)
             )
         }
         return result
+    }
+
+    fun getPlaylist(playlistId: String): Playlist? {
+        val query = "SELECT * FROM db.playlist " +
+                "WHERE id = $playlistId " +
+                "LIMIT 1;"
+        val resultSet = database.select(query) ?: return null
+        while (resultSet.next()) {
+            return getPlaylistParser(resultSet)
+        }
+        return null
     }
 
     fun getCds(count: Int = 10): List<Cd> {
@@ -193,7 +199,7 @@ FROM db.playlist
                 ),*/
     )
 
-    fun getArtistParser(resultSet: ResultSet): Artist? {
+    private fun getArtistParser(resultSet: ResultSet): Artist? {
         return if (resultSet.getString("artist_id") != null) Artist(
             id = resultSet.getString("artist_id"),
             name = resultSet.getString("artist_name"),
@@ -205,6 +211,13 @@ FROM db.playlist
             ) else null,
         ) else null
     }
+
+    private fun getPlaylistParser(resultSet: ResultSet) = Playlist(
+        resultSet.getString("id"),
+        resultSet.getString("name"),
+        resultSet.getString("update_date"),
+        resultSet.getInt("playbacks_count"),
+    )
 
     fun getCdSong(cd: Cd, count: Int = 10): List<Song> {
         val query = """SELECT song.id,

@@ -93,13 +93,13 @@ class Navigator @Inject constructor(
         )
     }
 
-    fun toPlaylist(playlist: Playlist) {
+    fun toPlaylist(playlist: Playlist, addToBackstack: Boolean = true) {
         navigateTo(
             fragment = PlaylistFragment(),
             args = Bundle().apply {
                 putSerializable(MusicFeedFragment.PARAM_PLAYLIST, playlist)
             },
-            addToBackstack = true
+            addToBackstack = addToBackstack,
         )
     }
 

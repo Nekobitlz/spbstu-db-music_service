@@ -43,10 +43,7 @@ class PlaylistFragment : FragmentWithSongs() {
                 R.id.share -> {
                     val sendIntent = Intent()
                     sendIntent.action = Intent.ACTION_SEND
-                    sendIntent.putExtra(Intent.EXTRA_TEXT,
-                        "$playlist \n\nПесни\n ${
-                            adapter.currentList.map { (it as SongItem).item }.joinToString("\n")
-                        }")
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "musicservice.app/playlist/${playlist.id}")
                     sendIntent.type = "text/plain"
                     startActivity(sendIntent)
                     return@setOnMenuItemClickListener true
