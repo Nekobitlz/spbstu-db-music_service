@@ -8,9 +8,11 @@ import androidx.fragment.app.FragmentManager
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import ru.spbstu.musicservice.R
+import ru.spbstu.musicservice.data.Cd
 import ru.spbstu.musicservice.data.Playlist
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.ui.auth.AuthFragment
+import ru.spbstu.musicservice.ui.cds.CdFragment
 import ru.spbstu.musicservice.ui.cds.CdsFragment
 import ru.spbstu.musicservice.ui.charts.ChartsFragment
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
@@ -94,6 +96,16 @@ class Navigator @Inject constructor(
             fragment = PlaylistFragment(),
             args = Bundle().apply {
                 putSerializable(MusicFeedFragment.PARAM_PLAYLIST, playlist)
+            },
+            addToBackstack = true
+        )
+    }
+
+    fun toCd(cd: Cd) {
+        navigateTo(
+            fragment = CdFragment(),
+            args = Bundle().apply {
+                putSerializable(MusicFeedFragment.PARAM_CD, cd)
             },
             addToBackstack = true
         )

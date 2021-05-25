@@ -16,10 +16,18 @@ import ru.spbstu.commons.adapter.BaseAdapter
 import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.commons.lazyUnsychronized
 import ru.spbstu.musicservice.R
+import ru.spbstu.musicservice.data.Cd
+import ru.spbstu.musicservice.data.Playlist
+import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
+import ru.spbstu.musicservice.ui.feed.NavigationType
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CdsFragment : BaseRecyclerFragment() {
+
+    @Inject
+    lateinit var navigator: Navigator
 
     private val viewModel: CdsViewModel by viewModels()
 
@@ -67,6 +75,11 @@ class CdsFragment : BaseRecyclerFragment() {
                     adapter.submitList(it.item as List<BaseAdapterItem<RecyclerView.ViewHolder>>)
                 }
                 is State.Error -> showError()
+            }
+        }
+        viewModel.navigationEvent.observe(viewLifecycleOwner) {
+            when (it.type) {
+                NavigationType.CD -> navigator.toCd(it.item?.entity as? Cd ?: return@observe)
             }
         }
     }

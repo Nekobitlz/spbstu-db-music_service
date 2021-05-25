@@ -8,50 +8,31 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.spbstu.commons.SingleLiveData
-import ru.spbstu.musicservice.R
+import ru.spbstu.musicservice.data.Cd
 import ru.spbstu.musicservice.repository.DatabaseRepository
 import ru.spbstu.musicservice.ui.State
-import ru.spbstu.musicservice.ui.feed.NavigationEvent
-import ru.spbstu.musicservice.ui.feed.NavigationType
 import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
-import ru.spbstu.musicservice.ui.feed.item.BaseMusicFeedRecycleItem
+import ru.spbstu.musicservice.ui.songs.SongItem
 import javax.inject.Inject
 
 @HiltViewModel
-class CdsViewModel @Inject constructor(
+class CdViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository,
 ) : ViewModel(), MusicFeedClickListener {
 
-    private val _items = MutableLiveData<State<List<CdItem>>>()
-    val items: LiveData<State<List<CdItem>>>
+    private val _items = MutableLiveData<State<List<SongItem>>>()
+    val items: LiveData<State<List<SongItem>>>
         get() = _items
 
-    private val _navigationEvent = SingleLiveData<NavigationEvent>()
-    val navigationEvent: LiveData<NavigationEvent>
-        get() = _navigationEvent
-
-    init {
-        loadCds()
-    }
-
-    private fun loadCds() {
+    fun loadCdSong(cd: Cd) {
         viewModelScope.launch {
             _items.postValue(State.Loading())
             withContext(Dispatchers.IO) {
                 try {
-                    val list = mutableListOf<CdItem>()
-                    databaseRepository.getCds(100)
+                    val list = mutableListOf<SongItem>()
+                    databaseRepository.getCdSong(cd, 100)
                         .map {
-                            CdItem(
-                                BaseMusicFeedRecycleItem(
-                                    R.id.view_type_music_feed_cds,
-                                    it.id,
-                                    it.name,
-                                    rating = it.rating,
-                                    entity = it
-                                ), this@CdsViewModel
-                            )
+                            SongItem(it, this@CdViewModel)
                         }.also {
                             list.addAll(it)
                         }
@@ -67,11 +48,7 @@ class CdsViewModel @Inject constructor(
         }
     }
 
-    fun onRefresh() {
-        loadCds()
-    }
-
-    override fun onCdClick(item: BaseMusicFeedRecycleItem) {
-        _navigationEvent.value = NavigationEvent(item, NavigationType.CD)
+    fun onRefresh(cd: Cd) {
+        loadCdSong(cd)
     }
 }

@@ -21,15 +21,11 @@ abstract class FragmentWithSongs : Fragment(R.layout.fragment_with_songs) {
 
     override fun onStart() {
         super.onStart()
-        binding.toolbar.visible()
-        binding.collapsingToolbar.visible()
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
     }
 
     override fun onStop() {
         super.onStop()
-        binding.toolbar.hide()
-        binding.collapsingToolbar.hide()
         (activity as? AppCompatActivity)?.supportActionBar?.show()
     }
 

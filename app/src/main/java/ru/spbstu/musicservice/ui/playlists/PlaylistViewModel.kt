@@ -28,7 +28,7 @@ class PlaylistViewModel @Inject constructor(
         viewModelScope.launch {
             _items.postValue(State.Loading())
             withContext(Dispatchers.IO) {
-              //  try {
+                try {
                     val list = mutableListOf<SongItem>()
                     databaseRepository.getPlaylistSongs(playlist, 100)
                         .map {
@@ -41,9 +41,9 @@ class PlaylistViewModel @Inject constructor(
                     } else {
                         _items.postValue(State.Success(list.toList()))
                     }
-                /*} catch (t: Throwable) {
+                } catch (t: Throwable) {
                     _items.postValue(State.Error(t))
-                }*/
+                }
             }
         }
     }

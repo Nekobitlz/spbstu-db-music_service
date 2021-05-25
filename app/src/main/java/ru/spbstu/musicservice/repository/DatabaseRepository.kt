@@ -164,20 +164,26 @@ FROM db.playlist
         val resultSet = database.select(query) ?: return listOf()
         val list = mutableListOf<Song>()
         while (resultSet.next()) {
-            val song = Song(
-                id = resultSet.getString("id"),
-                name = resultSet.getString("song_name"),
-                length = resultSet.getFloat("length"),
-                releaseDate = resultSet.getString("release_date"),
-                rating = resultSet.getFloat("rating"),
-                albumPosition = resultSet.getInt("album_position"),
-                playbacksCount = resultSet.getInt("playbacks_count"),
-                genre = if (resultSet.getString("genre_id") != null) Genre(
-                    resultSet.getString("genre_id"),
-                    resultSet.getString("genre_name")
-                ) else null,
-                artist = getArtistParser(resultSet)
-                /*album = Album(
+            val song = getSongParser(resultSet)
+            list.add(song)
+        }
+        return list
+    }
+
+    private fun getSongParser(resultSet: ResultSet) = Song(
+        id = resultSet.getString("id"),
+        name = resultSet.getString("song_name"),
+        length = resultSet.getFloat("length"),
+        releaseDate = resultSet.getString("release_date"),
+        rating = resultSet.getFloat("rating"),
+        albumPosition = resultSet.getInt("album_position"),
+        playbacksCount = resultSet.getInt("playbacks_count"),
+        genre = if (resultSet.getString("genre_id") != null) Genre(
+            resultSet.getString("genre_id"),
+            resultSet.getString("genre_name")
+        ) else null,
+        artist = getArtistParser(resultSet)
+        /*album = Album(
                     id = resultSet.getString("album.id"),
                     name = resultSet.getString("album.name"),
                     length = resultSet.getFloat("album.length"),
@@ -185,11 +191,7 @@ FROM db.playlist
                     rating = resultSet.getFloat("album.rating"),
                     playbacksCount  = resultSet.getInt("album.playbacks_count"),
                 ),*/
-            )
-            list.add(song)
-        }
-        return list
-    }
+    )
 
     fun getArtistParser(resultSet: ResultSet): Artist? {
         return if (resultSet.getString("artist_id") != null) Artist(
@@ -202,5 +204,38 @@ FROM db.playlist
                 resultSet.getString("role_name")
             ) else null,
         ) else null
+    }
+
+    fun getCdSong(cd: Cd, count: Int = 10): List<Song> {
+        val query = """SELECT song.id,
+       song.name  as song_name,
+       song.length,
+       song.release_date,
+       song.rating,
+       song.album_position,
+       song.playbacks_count,
+       song.genre_id,
+       genre.name as genre_name,
+       ar1.id as artist_id,
+       ar1.name as artist_name,
+       ar1.description,
+       ar1.rating as artist_rating,
+       role.id as role_id,
+       role.name as role_name
+FROM db.cd
+         INNER JOIN db.song ON song.album_id = cd.id
+         LEFT JOIN db.genre ON genre.id = song.genre_id
+         LEFT JOIN db.song_artist ON song_artist.song_id = song.id
+         LEFT JOIN db.artist as ar1 ON song_artist.artist_id = ar1.id
+         LEFT JOIN db.role ON ar1.role_id = role.id
+         WHERE cd.id = '${cd.id}' LIMIT $count;
+         """
+        val resultSet = database.select(query) ?: return listOf()
+        val list = mutableListOf<Song>()
+        while (resultSet.next()) {
+            val song = getSongParser(resultSet)
+            list.add(song)
+        }
+        return list
     }
 }
