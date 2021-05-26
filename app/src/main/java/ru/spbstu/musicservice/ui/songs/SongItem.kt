@@ -38,7 +38,7 @@ class SongItemViewHolder(
 
     fun bind(item: Song, songParams: SongParams) {
         binding.tvSongName.setTextOrHide(item.name)
-        binding.tvSongArtist.setTextOrHide(item.artist?.name)
+        binding.tvSongArtist.text = item.artist?.name ?: itemView.resources.getString(R.string.unknown_artist)
         binding.tvSongLength.setTextOrHide(item.stringLength)
         binding.ivCover.setImageURI(item.imageUrl)
         binding.tvPosition.setVisible(songParams.showPosition)

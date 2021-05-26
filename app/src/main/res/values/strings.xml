@@ -50,4 +50,5 @@
     <string name="search">Поиск</string>
     <string name="songs_search_hint">Введите название песни</string>
     <string name="add">Добавить</string>
+    <string name="unknown_artist">Неизвестный исполнитель</string>
 </resources>
