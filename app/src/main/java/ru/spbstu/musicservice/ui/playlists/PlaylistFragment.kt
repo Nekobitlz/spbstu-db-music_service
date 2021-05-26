@@ -12,13 +12,19 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.Playlist
+import ru.spbstu.musicservice.data.Song
+import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment.Companion.PARAM_PLAYLIST
 import ru.spbstu.musicservice.ui.songs.FragmentWithSongs
 import ru.spbstu.musicservice.ui.songs.SongItem
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PlaylistFragment : FragmentWithSongs() {
+
+    @Inject
+    lateinit var navigator: Navigator
 
     private val viewModel: PlaylistViewModel by viewModels()
     private lateinit var playlist: Playlist
@@ -43,7 +49,8 @@ class PlaylistFragment : FragmentWithSongs() {
                 R.id.share -> {
                     val sendIntent = Intent()
                     sendIntent.action = Intent.ACTION_SEND
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, "musicservice.app/playlist/${playlist.id}")
+                    sendIntent.putExtra(Intent.EXTRA_TEXT,
+                        "musicservice.app/playlist/${playlist.id}")
                     sendIntent.type = "text/plain"
                     startActivity(sendIntent)
                     return@setOnMenuItemClickListener true
@@ -64,10 +71,23 @@ class PlaylistFragment : FragmentWithSongs() {
                 is State.Error -> showError(getString(R.string.playlist_no_songs))
             }
         }
+        parentFragmentManager.setFragmentResultListener(PARAM_SEARCH_REQUEST, this) { requestKey, bundle ->
+            if (requestKey == PARAM_SEARCH_REQUEST) {
+                viewModel.onSongSelected(bundle.getSerializable(PARAM_SONG) as Song)
+            }
+        }
+        viewModel.songEvent.observe(viewLifecycleOwner) {
+            navigator.toSongsSearch()
+        }
     }
 
     override fun onRefresh() {
         super.onRefresh()
         viewModel.onRefresh(playlist)
+    }
+
+    companion object {
+        const val PARAM_SEARCH_REQUEST = "PARAM_SEARCH_REQUEST"
+        const val PARAM_SONG = "PARAM_SONG"
     }
 }

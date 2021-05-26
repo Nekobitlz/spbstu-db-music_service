@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentResultListener
+import androidx.fragment.app.setFragmentResultListener
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import ru.spbstu.musicservice.R
@@ -22,6 +24,7 @@ import ru.spbstu.musicservice.ui.payments.PaymentsFragment
 import ru.spbstu.musicservice.ui.playlists.PlaylistFragment
 import ru.spbstu.musicservice.ui.playlists.PlaylistsFragment
 import ru.spbstu.musicservice.ui.register.RegisterFragment
+import ru.spbstu.musicservice.ui.songs.search.SongsSearchFragment
 import ru.spbstu.musicservice.ui.user_info.UserInfoFragment
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -119,6 +122,13 @@ class Navigator @Inject constructor(
             args = Bundle().apply {
                 putSerializable(MusicFeedFragment.PARAM_CHART, chart)
             },
+            addToBackstack = true
+        )
+    }
+
+    fun toSongsSearch() {
+        navigateTo(
+            fragment = SongsSearchFragment(),
             addToBackstack = true
         )
     }

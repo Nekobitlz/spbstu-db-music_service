@@ -144,4 +144,5 @@ enum class NavigationType {
     NONE,
     CHART, CD, PLAYLIST,
     CHART_MORE, CD_MORE, PLAYLIST_MORE,
+    SONG,
 }

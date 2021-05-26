@@ -47,4 +47,6 @@
     <string name="share">Поделиться</string>
     <string name="chart">Чарт</string>
     <string name="remove_song_from_playlist">Удалить песню из плейлиста</string>
+    <string name="search">Поиск</string>
+    <string name="songs_search_hint">Введите название песни</string>
 </resources>

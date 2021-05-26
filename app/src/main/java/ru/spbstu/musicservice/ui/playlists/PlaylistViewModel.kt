@@ -15,6 +15,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.spbstu.commons.SingleLiveData
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.Playlist
 import ru.spbstu.musicservice.data.Song
@@ -39,6 +40,10 @@ class PlaylistViewModel @Inject constructor(
     val items: LiveData<State<List<SongItem>>>
         get() = _items
 
+    private val _songEvent = SingleLiveData<Song>()
+    val songEvent: LiveData<Song>
+        get() = _songEvent
+
     fun loadPlaylistSongs(playlist: Playlist, shouldLoading: Boolean = true) {
         viewModelScope.launch {
             if (shouldLoading) _items.postValue(State.Loading())
@@ -50,7 +55,7 @@ class PlaylistViewModel @Inject constructor(
                         .map {
                             SongItem(it, object : SongClickListener {
                                 override fun onSongClick(song: Song) {
-                                    TODO("Not yet implemented")
+                                    _songEvent.postValue(song)
                                 }
 
                                 override fun onMoreButtonClick(view: View, song: Song) {
@@ -114,5 +119,9 @@ class PlaylistViewModel @Inject constructor(
 
     private fun showErrorToast(text: String) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+    }
+
+    fun onSongSelected(song: Song) {
+        Toast.makeText(context, "Выбрана песня ${song.name}", Toast.LENGTH_SHORT).show()
     }
 }

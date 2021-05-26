@@ -42,7 +42,7 @@ class SongItemViewHolder(
         binding.tvSongLength.setTextOrHide(item.stringLength)
         binding.ivCover.setImageURI(item.imageUrl)
         binding.tvPosition.setVisible(songParams.showPosition)
-        binding.tvPosition.setTextOrHide(item.albumPosition.toString())
+        binding.tvPosition.text = item.albumPosition.toString()
         binding.btnMore.setVisible(songParams.showBtnMore)
         binding.btnMore.setOnClickListener {
             songClickListener.onMoreButtonClick(it, item)

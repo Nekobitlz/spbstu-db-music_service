@@ -63,11 +63,17 @@ class MusicFeedFragment : BaseRecyclerFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_user_settings) {
-            navigator.toUserInfo(user)
-            return true
+        when (item.itemId) {
+            R.id.menu_user_settings -> {
+                navigator.toUserInfo(user)
+                return true
+            }
+            R.id.menu_search -> {
+                navigator.toSongsSearch()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

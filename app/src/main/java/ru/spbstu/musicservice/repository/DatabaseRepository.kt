@@ -291,4 +291,37 @@ WHERE chart.id = '${chart.id}' LIMIT $count;
         database.insert(query)
         return true
     }
+
+    fun searchSongs(query: String, count: Int): List<Song> {
+        val request = """SELECT song.id,
+       song.name  as song_name,
+       song.length,
+       song.release_date,
+       song.rating,
+       song.album_position,
+       song.playbacks_count,
+       song.genre_id,
+       genre.name as genre_name,
+       ar1.id as artist_id,
+       ar1.name as artist_name,
+       ar1.description,
+       ar1.rating as artist_rating,
+       role.id as role_id,
+       role.name as role_name
+       FROM db.song
+         LEFT JOIN db.genre ON genre.id = song.genre_id
+         LEFT JOIN db.song_artist ON song_artist.song_id = song.id
+         LEFT JOIN db.artist as ar1 ON song_artist.artist_id = ar1.id
+         LEFT JOIN db.role ON ar1.role_id = role.id
+         WHERE song.name LIKE '%$query%'
+         LIMIT $count;
+         """
+        val resultSet = database.select(request) ?: return listOf()
+        val list = mutableListOf<Song>()
+        while (resultSet.next()) {
+            val song = getSongParser(resultSet)
+            list.add(song)
+        }
+        return list
+    }
 }
