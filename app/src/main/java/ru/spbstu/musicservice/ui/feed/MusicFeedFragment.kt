@@ -26,12 +26,8 @@ import ru.spbstu.musicservice.data.Playlist
 import ru.spbstu.musicservice.data.User
 import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
-import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedPlaylistsViewHolder
 import ru.spbstu.musicservice.ui.main.APP_STORAGE
 import ru.spbstu.musicservice.ui.main.PARAM_AUTH_USERS_COUNT
-import ru.spbstu.musicservice.ui.playlists.PlaylistFragment
-import ru.spbstu.musicservice.ui.playlists.PlaylistsFragment
-import ru.spbstu.musicservice.ui.songs.FragmentWithSongs
 import javax.inject.Inject
 
 @AndroidEntryPoint

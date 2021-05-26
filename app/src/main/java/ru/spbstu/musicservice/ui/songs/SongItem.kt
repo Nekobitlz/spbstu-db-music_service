@@ -8,11 +8,10 @@ import ru.spbstu.commons.setTextOrHide
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.Song
 import ru.spbstu.musicservice.databinding.ItemSongBinding
-import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
 
 class SongItem(
     val item: Song,
-    private val musicFeedClickListener: MusicFeedClickListener,
+    private val songClickListener: SongClickListener,
 ) : BaseAdapterItem<SongItemViewHolder>() {
 
     override val viewType: Int
@@ -21,7 +20,7 @@ class SongItem(
     override fun createViewHolder(parent: ViewGroup): SongItemViewHolder {
         return SongItemViewHolder(
             ItemSongBinding.inflate(parent.layoutInflater, parent, false),
-            musicFeedClickListener
+            songClickListener
         )
     }
 
@@ -32,7 +31,7 @@ class SongItem(
 
 class SongItemViewHolder(
     private val binding: ItemSongBinding,
-    private val musicFeedClickListener: MusicFeedClickListener,
+    private val songClickListener: SongClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: Song) {
@@ -40,8 +39,11 @@ class SongItemViewHolder(
         binding.tvSongArtist.setTextOrHide(item.artist?.name)
         binding.tvSongLength.setTextOrHide(item.stringLength)
         binding.ivCover.setImageURI(item.imageUrl)
+        binding.btnMore.setOnClickListener {
+            songClickListener.onMoreButtonClick(it, item)
+        }
         itemView.setOnClickListener {
-            musicFeedClickListener.onSongClick(item)
+            songClickListener.onSongClick(item)
         }
     }
 }

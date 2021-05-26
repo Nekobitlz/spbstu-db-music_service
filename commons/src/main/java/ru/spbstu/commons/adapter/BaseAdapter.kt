@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.spbstu.commons.DummyViewHolder
 
-open class BaseAdapter :
-    ListAdapter<BaseAdapterItem<RecyclerView.ViewHolder>, RecyclerView.ViewHolder>(DIFF_UTIL) {
+open class BaseAdapter(
+    diffUtil: DiffUtil.ItemCallback<BaseAdapterItem<RecyclerView.ViewHolder>> = DIFF_UTIL,
+) : ListAdapter<BaseAdapterItem<RecyclerView.ViewHolder>, RecyclerView.ViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return currentList.find { it.viewType == viewType }?.createViewHolder(parent)
@@ -28,19 +29,19 @@ open class BaseAdapter :
     }
 
     companion object {
-        private val DIFF_UTIL =
+        val DIFF_UTIL =
             object : DiffUtil.ItemCallback<BaseAdapterItem<RecyclerView.ViewHolder>>() {
 
                 override fun areItemsTheSame(
                     old: BaseAdapterItem<RecyclerView.ViewHolder>,
-                    new: BaseAdapterItem<RecyclerView.ViewHolder>
+                    new: BaseAdapterItem<RecyclerView.ViewHolder>,
                 ): Boolean {
                     return old.viewType == new.viewType
                 }
 
                 override fun areContentsTheSame(
                     old: BaseAdapterItem<RecyclerView.ViewHolder>,
-                    new: BaseAdapterItem<RecyclerView.ViewHolder>
+                    new: BaseAdapterItem<RecyclerView.ViewHolder>,
                 ): Boolean {
                     return old == new
                 }

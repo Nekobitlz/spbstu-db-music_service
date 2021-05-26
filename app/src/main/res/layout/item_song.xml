@@ -12,10 +12,10 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="12dp"
-        app:roundedCornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundedCornerRadius="8dp" />
 
     <TextView
         android:id="@+id/tv_song_name"
@@ -50,11 +50,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="8dp"
         android:text="1:51"
         android:textColor="@color/default_text"
-        android:textSize="13sp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_more"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginEnd="20dp" />
+
+    <ImageButton
+        android:id="@+id/btn_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:contentDescription="@null"
+        android:padding="12dp"
+        android:src="@drawable/ic_baseline_more_vert_24"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

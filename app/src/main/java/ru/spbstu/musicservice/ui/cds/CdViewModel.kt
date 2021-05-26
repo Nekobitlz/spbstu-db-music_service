@@ -9,16 +9,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.spbstu.musicservice.data.Cd
+import ru.spbstu.musicservice.data.Song
 import ru.spbstu.musicservice.repository.DatabaseRepository
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
+import ru.spbstu.musicservice.ui.songs.SongClickListener
 import ru.spbstu.musicservice.ui.songs.SongItem
 import javax.inject.Inject
 
 @HiltViewModel
 class CdViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository,
-) : ViewModel(), MusicFeedClickListener {
+) : ViewModel(), SongClickListener {
 
     private val _items = MutableLiveData<State<List<SongItem>>>()
     val items: LiveData<State<List<SongItem>>>
@@ -50,5 +52,9 @@ class CdViewModel @Inject constructor(
 
     fun onRefresh(cd: Cd) {
         loadCdSong(cd)
+    }
+
+    override fun onSongClick(song: Song) {
+        TODO("Not yet implemented")
     }
 }

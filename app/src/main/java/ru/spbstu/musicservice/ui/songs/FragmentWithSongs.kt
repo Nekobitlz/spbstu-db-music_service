@@ -4,17 +4,28 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.spbstu.commons.*
 import ru.spbstu.commons.adapter.BaseAdapter
+import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.databinding.FragmentWithSongsBinding
 
 abstract class FragmentWithSongs : Fragment(R.layout.fragment_with_songs) {
 
     protected val binding: FragmentWithSongsBinding by viewBinding()
-    protected val adapter = BaseAdapter()
+    protected val adapter = BaseAdapter(object : DiffUtil.ItemCallback<SongItem>() {
+        override fun areItemsTheSame(oldItem: SongItem, newItem: SongItem): Boolean {
+            return oldItem.item.id == newItem.item.id
+        }
+
+        override fun areContentsTheSame(oldItem: SongItem, newItem: SongItem): Boolean {
+            return oldItem.item == newItem.item
+        }
+    } as DiffUtil.ItemCallback<BaseAdapterItem<RecyclerView.ViewHolder>>)
 
     abstract fun getName(): String
     abstract fun getType(): String

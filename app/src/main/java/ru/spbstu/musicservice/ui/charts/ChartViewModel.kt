@@ -10,16 +10,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.spbstu.musicservice.data.Cd
 import ru.spbstu.musicservice.data.Chart
+import ru.spbstu.musicservice.data.Song
 import ru.spbstu.musicservice.repository.DatabaseRepository
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
+import ru.spbstu.musicservice.ui.songs.SongClickListener
 import ru.spbstu.musicservice.ui.songs.SongItem
 import javax.inject.Inject
 
 @HiltViewModel
 class ChartViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository,
-) : ViewModel(), MusicFeedClickListener {
+) : ViewModel(), SongClickListener {
 
     private val _items = MutableLiveData<State<List<SongItem>>>()
     val items: LiveData<State<List<SongItem>>>
@@ -29,7 +31,7 @@ class ChartViewModel @Inject constructor(
         viewModelScope.launch {
             _items.postValue(State.Loading())
             withContext(Dispatchers.IO) {
-             //   try {
+                try {
                     val list = mutableListOf<SongItem>()
                     databaseRepository.getChartSongs(chart, 100)
                         .map {
@@ -42,14 +44,18 @@ class ChartViewModel @Inject constructor(
                     } else {
                         _items.postValue(State.Success(list.toList()))
                     }
-                /*} catch (t: Throwable) {
+                } catch (t: Throwable) {
                     _items.postValue(State.Error(t))
-                }*/
+                }
             }
         }
     }
 
     fun onRefresh(chart: Chart) {
         loadChart(chart)
+    }
+
+    override fun onSongClick(song: Song) {
+        TODO("Not yet implemented")
     }
 }

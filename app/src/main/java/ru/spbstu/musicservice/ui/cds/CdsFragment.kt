@@ -17,7 +17,6 @@ import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.commons.lazyUnsychronized
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.Cd
-import ru.spbstu.musicservice.data.Playlist
 import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.NavigationType
