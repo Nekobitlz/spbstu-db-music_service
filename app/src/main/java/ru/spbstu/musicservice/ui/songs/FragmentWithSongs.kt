@@ -66,10 +66,11 @@ abstract class FragmentWithSongs : Fragment(R.layout.fragment_with_songs) {
     }
 
     protected open fun showError(
-        text: String = resources.getString(ru.spbstu.commons.R.string.default_error),
+        text: String = resources.getString(R.string.default_error),
+        retryText: String = resources.getString(R.string.retry),
         onRetryClick: (() -> Unit)? = { onRefresh() },
     ) {
-        binding.emptyView.state = EmptyViewState.Error(text, onRetryClick)
+        binding.emptyView.state = EmptyViewState.Error(text, retryText, onRetryClick)
         binding.recyclerView.gone()
     }
 

@@ -7,7 +7,7 @@ data class Playlist(
     val name: String,
     val updateDate: String,
     val playbacksCount: Int,
-    val imageUrl: String = Utils.getRandomImage(),
+    val imageUrl: String = Utils.getRandomImage(id),
 ) : Entity() {
     override fun toString(): String {
         return "Плейлист\nНазвание: '$name'\nДата обновления: '$updateDate'\nКоличество воспроизведений: $playbacksCount\nОбложка: $imageUrl"

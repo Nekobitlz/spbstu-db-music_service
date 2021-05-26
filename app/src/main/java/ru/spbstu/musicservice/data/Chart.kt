@@ -8,5 +8,5 @@ data class Chart(
     val startDate: String,
     val endDate: String,
     val version: Int,
-    val imageUrl: String = Utils.getRandomImage()
+    val imageUrl: String = Utils.getRandomImage(id)
 ) : Entity()

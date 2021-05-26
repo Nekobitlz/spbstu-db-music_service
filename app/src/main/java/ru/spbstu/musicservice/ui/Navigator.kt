@@ -126,7 +126,7 @@ class Navigator @Inject constructor(
         )
     }
 
-    fun toSongsSearch(shouldReturnResult: Boolean = true) {
+    fun toSongsSearch(shouldReturnResult: Boolean = false) {
         navigateTo(
             fragment = SongsSearchFragment(),
             args = Bundle().apply {

@@ -45,7 +45,7 @@ class PlaylistFragment : FragmentWithSongs() {
         super.onViewCreated(view, savedInstanceState)
         binding.fab.visible()
         binding.fab.setOnClickListener {
-            navigator.toSongsSearch()
+            navigator.toSongsSearch(true)
         }
         binding.image.setImageURI(playlist.imageUrl + "/?blur=7")
         binding.toolbar.inflateMenu(R.menu.menu_playlist)
@@ -72,10 +72,15 @@ class PlaylistFragment : FragmentWithSongs() {
                     showData()
                     adapter.submitList(it.item as List<BaseAdapterItem<RecyclerView.ViewHolder>>)
                 }
-                is State.Error -> showError(getString(R.string.playlist_no_songs))
+                is State.Error -> showError(getString(R.string.playlist_no_songs),
+                    getString(R.string.add),
+                    onRetryClick = {
+                        navigator.toSongsSearch(true)
+                    })
             }
         }
-        parentFragmentManager.setFragmentResultListener(PARAM_SEARCH_REQUEST, this) { requestKey, bundle ->
+        parentFragmentManager.setFragmentResultListener(PARAM_SEARCH_REQUEST,
+            this) { requestKey, bundle ->
             if (requestKey == PARAM_SEARCH_REQUEST) {
                 viewModel.onSongSelected(playlist, bundle.getSerializable(PARAM_SONG) as Song)
             }

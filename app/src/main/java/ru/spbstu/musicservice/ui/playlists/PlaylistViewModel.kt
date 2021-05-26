@@ -101,8 +101,7 @@ class PlaylistViewModel @Inject constructor(
                     val song = popupMenuController.song
                     val isSuccess = databaseRepository.removeSong(playlist, song)
                     withContext(Dispatchers.Main) {
-                        val data = _items.value
-                        if (isSuccess && data is State.Success) {
+                        if (isSuccess) {
                             loadPlaylistSongs(playlist, false)
                         } else {
                             showErrorToast("Не удалось удалить песню из плейлиста")
@@ -127,8 +126,7 @@ class PlaylistViewModel @Inject constructor(
                 try {
                     val isSuccess = databaseRepository.addSong(playlist, song)
                     withContext(Dispatchers.Main) {
-                        val data = _items.value
-                        if (isSuccess && data is State.Success) {
+                        if (isSuccess) {
                             loadPlaylistSongs(playlist, false)
                         } else {
                             showErrorToast("Не удалось добавить песню в плейлист")

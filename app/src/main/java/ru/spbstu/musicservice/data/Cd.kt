@@ -8,5 +8,5 @@ data class Cd(
     val releaseDate: String,
     val rating: Float,
     val length: Float,
-    val imageUrl: String = Utils.getRandomImage(),
+    val imageUrl: String = Utils.getRandomImage(id),
 ) : Entity()

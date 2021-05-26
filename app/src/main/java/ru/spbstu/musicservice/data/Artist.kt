@@ -7,6 +7,6 @@ data class Artist(
     val name: String,
     val description: String,
     val rating: Float,
-    val imageUrl: String = Utils.getRandomImage(),
+    val imageUrl: String = Utils.getRandomImage(id),
     val role: Role?,
 ): Entity()

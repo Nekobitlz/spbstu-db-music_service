@@ -55,7 +55,7 @@ abstract class BaseRecyclerFragment : Fragment(R.layout.fragment_base_recycler) 
         onRetryClick: (() -> Unit)? = { onRefresh() },
     ) {
         recyclerBinding.swipeRefresh.isRefreshing = false
-        recyclerBinding.emptyView.state = EmptyViewState.Error(text, onRetryClick)
+        recyclerBinding.emptyView.state = EmptyViewState.Error(text, null, onRetryClick)
         recyclerBinding.list.gone()
     }
 
@@ -63,15 +63,4 @@ abstract class BaseRecyclerFragment : Fragment(R.layout.fragment_base_recycler) 
         recyclerBinding.emptyView.state = EmptyViewState.Loading
         recyclerBinding.list.gone()
     }
-
-/* TODO
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        if (recyclerView != null) {
-            outState.putParcelable(
-                BaseRefreshRecyclerFragment.STATE_RECYCLER_SCROLL,
-                recyclerView.getLayoutManager().onSaveInstanceState()
-            )
-        }
-    }*/
 }
