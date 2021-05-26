@@ -51,4 +51,12 @@
     <string name="songs_search_hint">Введите название песни</string>
     <string name="add">Добавить</string>
     <string name="unknown_artist">Неизвестный исполнитель</string>
+    <string name="song">Песня</string>
+    <string name="song_info">Информация о песне</string>
+    <string name="song_info_artist">Исполнитель:</string>
+    <string name="song_info_length">Продолжительность:</string>
+    <string name="song_info_release_date">Дата релиза:</string>
+    <string name="song_info_genre">Жанр:</string>
+    <string name="song_info_playbacks">Количество прослушиваний:</string>
+    <string name="song_info_rating">Рейтинг:</string>
 </resources>

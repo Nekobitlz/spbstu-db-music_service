@@ -86,7 +86,7 @@ class PlaylistFragment : FragmentWithSongs() {
             }
         }
         viewModel.songEvent.observe(viewLifecycleOwner) {
-            // TODO
+            navigator.toSong(it)
         }
     }
 

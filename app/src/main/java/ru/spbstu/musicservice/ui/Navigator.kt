@@ -10,10 +10,7 @@ import androidx.fragment.app.setFragmentResultListener
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import ru.spbstu.musicservice.R
-import ru.spbstu.musicservice.data.Cd
-import ru.spbstu.musicservice.data.Chart
-import ru.spbstu.musicservice.data.Playlist
-import ru.spbstu.musicservice.data.User
+import ru.spbstu.musicservice.data.*
 import ru.spbstu.musicservice.ui.auth.AuthFragment
 import ru.spbstu.musicservice.ui.cds.CdFragment
 import ru.spbstu.musicservice.ui.cds.CdsFragment
@@ -22,8 +19,10 @@ import ru.spbstu.musicservice.ui.charts.ChartsFragment
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
 import ru.spbstu.musicservice.ui.payments.PaymentsFragment
 import ru.spbstu.musicservice.ui.playlists.PlaylistFragment
+import ru.spbstu.musicservice.ui.playlists.PlaylistFragment.Companion.PARAM_SONG
 import ru.spbstu.musicservice.ui.playlists.PlaylistsFragment
 import ru.spbstu.musicservice.ui.register.RegisterFragment
+import ru.spbstu.musicservice.ui.songs.SongFragment
 import ru.spbstu.musicservice.ui.songs.search.SongsSearchFragment
 import ru.spbstu.musicservice.ui.user_info.UserInfoFragment
 import java.lang.ref.WeakReference
@@ -134,6 +133,14 @@ class Navigator @Inject constructor(
             },
             addToBackstack = true
         )
+    }
+
+    fun toSong(song: Song) {
+        SongFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(PARAM_SONG, song)
+            }
+        }.show(activity?.supportFragmentManager ?: return, PARAM_SONG)
     }
 
     fun navigateTo(
