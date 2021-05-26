@@ -22,6 +22,7 @@ import ru.spbstu.musicservice.repository.DatabaseRepository
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.songs.SongClickListener
 import ru.spbstu.musicservice.ui.songs.SongItem
+import ru.spbstu.musicservice.ui.songs.SongParams
 import ru.spbstu.musicservice.ui.songs.SongPopupMenuController
 import javax.inject.Inject
 
@@ -45,6 +46,7 @@ class PlaylistViewModel @Inject constructor(
                 try {
                     val list = mutableListOf<SongItem>()
                     databaseRepository.getPlaylistSongs(playlist, 100)
+                        .onEachIndexed { position, item -> item.albumPosition = position + 1 }
                         .map {
                             SongItem(it, object : SongClickListener {
                                 override fun onSongClick(song: Song) {
@@ -54,7 +56,7 @@ class PlaylistViewModel @Inject constructor(
                                 override fun onMoreButtonClick(view: View, song: Song) {
                                     popupMenuController.show(view, song, playlist)
                                 }
-                            })
+                            }, SongParams(showBtnMore = true, showPosition = false))
                         }.also {
                             list.addAll(it)
                         }

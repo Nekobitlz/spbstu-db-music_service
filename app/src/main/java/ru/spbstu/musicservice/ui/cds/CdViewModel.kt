@@ -15,6 +15,7 @@ import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.adapter.MusicFeedClickListener
 import ru.spbstu.musicservice.ui.songs.SongClickListener
 import ru.spbstu.musicservice.ui.songs.SongItem
+import ru.spbstu.musicservice.ui.songs.SongParams
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,8 +34,9 @@ class CdViewModel @Inject constructor(
                 try {
                     val list = mutableListOf<SongItem>()
                     databaseRepository.getCdSong(cd, 100)
+                        .onEachIndexed { position, item -> item.albumPosition = position + 1 }
                         .map {
-                            SongItem(it, this@CdViewModel)
+                            SongItem(it, this@CdViewModel, SongParams(showBtnMore = false, showPosition = true))
                         }.also {
                             list.addAll(it)
                         }
