@@ -124,7 +124,7 @@ class PlaylistViewModel @Inject constructor(
     fun onSongSelected(playlist: Playlist, song: Song) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-              //  try {
+                try {
                     val isSuccess = databaseRepository.addSong(playlist, song)
                     withContext(Dispatchers.Main) {
                         val data = _items.value
@@ -134,11 +134,11 @@ class PlaylistViewModel @Inject constructor(
                             showErrorToast("Не удалось добавить песню в плейлист")
                         }
                     }
-                /*} catch (t: Throwable) {
+                } catch (t: Throwable) {
                     withContext(Dispatchers.Main) {
                         showErrorToast("Не удалось добавить песню в плейлист")
                     }
-                }*/
+                }
             }
         }
     }

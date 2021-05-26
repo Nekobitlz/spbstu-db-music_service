@@ -143,29 +143,17 @@ class DatabaseRepository @Inject constructor(
     }
 
     fun getPlaylistSongs(playlist: Playlist, count: Int): List<Song> {
-        val query = """SELECT song.id,
-       song.name  as song_name,
-       song.length,
-       song.release_date,
-       song.rating,
-       song.album_position,
-       song.playbacks_count,
-       song.genre_id,
-       genre.name as genre_name,
-       ar1.id as artist_id,
-       ar1.name as artist_name,
-       ar1.description,
-       ar1.rating as artist_rating,
-       role.id as role_id,
-       role.name as role_name
-FROM db.playlist
+        val query = """SELECT ${getSongFields()}
+         FROM db.playlist
          INNER JOIN db.playlist_song ON playlist.id = playlist_song.playlist_id
          LEFT JOIN db.song ON playlist_song.song_id = song.id
          LEFT JOIN db.genre ON genre.id = song.genre_id
          LEFT JOIN db.song_artist ON song_artist.song_id = song.id
          LEFT JOIN db.artist as ar1 ON song_artist.artist_id = ar1.id
          LEFT JOIN db.role ON ar1.role_id = role.id
-         WHERE db.playlist.id = '${playlist.id}' LIMIT $count;
+         WHERE db.playlist.id = '${playlist.id}' 
+         GROUP by song.id
+         LIMIT $count;
          """
         val resultSet = database.select(query) ?: return listOf()
         val list = mutableListOf<Song>()
@@ -219,29 +207,35 @@ FROM db.playlist
         resultSet.getInt("playbacks_count"),
     )
 
+    private fun getSongFields() = """
+           song.id,
+           song.name  as song_name,
+           song.length,
+           song.release_date,
+           song.rating,
+           song.album_position,
+           song.playbacks_count,
+           song.genre_id,
+           max(genre.name) as genre_name,
+           max(ar1.id)     as artist_id,
+           max(ar1.name)   as artist_name,
+           max(ar1.description) as description,
+           max(ar1.rating) as artist_rating,
+           max(role.id)    as role_id,
+           max(role.name)  as role_name
+       """
+
     fun getCdSong(cd: Cd, count: Int = 10): List<Song> {
-        val query = """SELECT song.id,
-       song.name  as song_name,
-       song.length,
-       song.release_date,
-       song.rating,
-       song.album_position,
-       song.playbacks_count,
-       song.genre_id,
-       genre.name as genre_name,
-       ar1.id as artist_id,
-       ar1.name as artist_name,
-       ar1.description,
-       ar1.rating as artist_rating,
-       role.id as role_id,
-       role.name as role_name
-FROM db.cd
+        val query = """SELECT ${getSongFields()}
+         FROM db.cd
          INNER JOIN db.song ON song.album_id = cd.id
          LEFT JOIN db.genre ON genre.id = song.genre_id
          LEFT JOIN db.song_artist ON song_artist.song_id = song.id
          LEFT JOIN db.artist as ar1 ON song_artist.artist_id = ar1.id
          LEFT JOIN db.role ON ar1.role_id = role.id
-         WHERE cd.id = '${cd.id}' LIMIT $count;
+         WHERE cd.id = '${cd.id}' 
+         GROUP by song.id
+         LIMIT $count;
          """
         val resultSet = database.select(query) ?: return listOf()
         val list = mutableListOf<Song>()
@@ -253,29 +247,17 @@ FROM db.cd
     }
 
     fun getChartSongs(chart: Chart, count: Int = 10): List<Song> {
-        val query = """SELECT song.id,
-       song.name  as song_name,
-       song.length,
-       song.release_date,
-       song.rating,
-       song.album_position,
-       song.playbacks_count,
-       song.genre_id,
-       genre.name as genre_name,
-       ar1.id as artist_id,
-       ar1.name as artist_name,
-       ar1.description,
-       ar1.rating as artist_rating,
-       role.id as role_id,
-       role.name as role_name
-FROM db.chart
+        val query = """SELECT ${getSongFields()}
+         FROM db.chart
          INNER JOIN db.chart_entry ON chart.id = chart_entry.chart_id
-    INNER JOIN db.song ON chart_entry.song_id = song.id
+         INNER JOIN db.song ON chart_entry.song_id = song.id
          LEFT JOIN db.genre ON genre.id = song.genre_id
          LEFT JOIN db.song_artist ON song_artist.song_id = song.id
          LEFT JOIN db.artist as ar1 ON song_artist.artist_id = ar1.id
          LEFT JOIN db.role ON ar1.role_id = role.id
-WHERE chart.id = '${chart.id}' LIMIT $count;
+         WHERE chart.id = '${chart.id}' 
+         GROUP by song.id
+         LIMIT $count;
          """
         val resultSet = database.select(query) ?: return listOf()
         val list = mutableListOf<Song>()
@@ -299,27 +281,14 @@ WHERE chart.id = '${chart.id}' LIMIT $count;
     }
 
     fun searchSongs(query: String, count: Int): List<Song> {
-        val request = """SELECT song.id,
-       song.name  as song_name,
-       song.length,
-       song.release_date,
-       song.rating,
-       song.album_position,
-       song.playbacks_count,
-       song.genre_id,
-       genre.name as genre_name,
-       ar1.id as artist_id,
-       ar1.name as artist_name,
-       ar1.description,
-       ar1.rating as artist_rating,
-       role.id as role_id,
-       role.name as role_name
-       FROM db.song
+        val request = """SELECT ${getSongFields()}
+         FROM db.song
          LEFT JOIN db.genre ON genre.id = song.genre_id
          LEFT JOIN db.song_artist ON song_artist.song_id = song.id
          LEFT JOIN db.artist as ar1 ON song_artist.artist_id = ar1.id
          LEFT JOIN db.role ON ar1.role_id = role.id
          WHERE song.name LIKE '%$query%'
+         GROUP by song.id
          LIMIT $count;
          """
         val resultSet = database.select(request) ?: return listOf()
