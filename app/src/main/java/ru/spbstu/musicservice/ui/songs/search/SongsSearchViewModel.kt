@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.spbstu.commons.SingleLiveData
@@ -33,9 +32,6 @@ class SongsSearchViewModel @Inject constructor(
 
     fun searchSongs(query: String) {
         viewModelScope.launch {
-            if (query.isNotBlank()) {
-                delay(300L)
-            }
             _items.postValue(State.Loading())
             withContext(Dispatchers.IO) {
                 try {

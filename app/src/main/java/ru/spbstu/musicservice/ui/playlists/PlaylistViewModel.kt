@@ -121,7 +121,25 @@ class PlaylistViewModel @Inject constructor(
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
-    fun onSongSelected(song: Song) {
-        Toast.makeText(context, "Выбрана песня ${song.name}", Toast.LENGTH_SHORT).show()
+    fun onSongSelected(playlist: Playlist, song: Song) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+              //  try {
+                    val isSuccess = databaseRepository.addSong(playlist, song)
+                    withContext(Dispatchers.Main) {
+                        val data = _items.value
+                        if (isSuccess && data is State.Success) {
+                            loadPlaylistSongs(playlist, false)
+                        } else {
+                            showErrorToast("Не удалось добавить песню в плейлист")
+                        }
+                    }
+                /*} catch (t: Throwable) {
+                    withContext(Dispatchers.Main) {
+                        showErrorToast("Не удалось добавить песню в плейлист")
+                    }
+                }*/
+            }
+        }
     }
 }

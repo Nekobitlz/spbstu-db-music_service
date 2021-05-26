@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.commons.adapter.BaseAdapterItem
+import ru.spbstu.commons.visible
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.Playlist
 import ru.spbstu.musicservice.data.Song
@@ -42,6 +43,10 @@ class PlaylistFragment : FragmentWithSongs() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.fab.visible()
+        binding.fab.setOnClickListener {
+            navigator.toSongsSearch()
+        }
         binding.image.setImageURI(playlist.imageUrl + "/?blur=7")
         binding.toolbar.inflateMenu(R.menu.menu_playlist)
         binding.toolbar.setOnMenuItemClickListener {
@@ -73,11 +78,11 @@ class PlaylistFragment : FragmentWithSongs() {
         }
         parentFragmentManager.setFragmentResultListener(PARAM_SEARCH_REQUEST, this) { requestKey, bundle ->
             if (requestKey == PARAM_SEARCH_REQUEST) {
-                viewModel.onSongSelected(bundle.getSerializable(PARAM_SONG) as Song)
+                viewModel.onSongSelected(playlist, bundle.getSerializable(PARAM_SONG) as Song)
             }
         }
         viewModel.songEvent.observe(viewLifecycleOwner) {
-            navigator.toSongsSearch()
+            // TODO
         }
     }
 

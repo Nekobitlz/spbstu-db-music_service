@@ -286,6 +286,12 @@ WHERE chart.id = '${chart.id}' LIMIT $count;
         return list
     }
 
+    fun addSong(playlist: Playlist, song: Song): Boolean {
+        val query = "INSERT INTO db.playlist_song (playlist_id, song_id) VALUES ('${playlist.id}', '${song.id}');"
+        database.insert(query)
+        return true
+    }
+
     fun removeSong(playlist: Playlist, song: Song): Boolean {
         val query = "DELETE from db.playlist_song where playlist_id='${playlist.id}' AND song_id='${song.id}';"
         database.insert(query)

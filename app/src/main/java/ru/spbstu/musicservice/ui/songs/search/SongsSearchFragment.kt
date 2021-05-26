@@ -8,8 +8,13 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.spbstu.commons.BaseRecyclerFragment
 import ru.spbstu.commons.adapter.BaseAdapter
 import ru.spbstu.commons.adapter.BaseAdapterItem
@@ -50,11 +55,15 @@ class SongsSearchFragment : BaseRecyclerFragment() {
             }
         }
         viewModel.songEvent.observe(viewLifecycleOwner) {
-            setFragmentResult(
-                PARAM_SEARCH_REQUEST,
-                Bundle().apply { putSerializable(PARAM_SONG, it) }
-            )
-            activity?.onBackPressed()
+            if (arguments?.getBoolean(PARAM_SHOULD_RETURN_RESULT) == true) {
+                setFragmentResult(
+                    PARAM_SEARCH_REQUEST,
+                    Bundle().apply { putSerializable(PARAM_SONG, it) }
+                )
+                activity?.onBackPressed()
+            } else {
+
+            }
         }
         viewModel.searchSongs("")
     }
@@ -79,12 +88,22 @@ class SongsSearchFragment : BaseRecyclerFragment() {
         searchView.maxWidth = Int.MAX_VALUE
         searchView.queryHint = getString(R.string.songs_search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            var debounceJob: Job? = null
+
             override fun onQueryTextSubmit(text: String): Boolean = true
 
             override fun onQueryTextChange(text: String): Boolean {
-                viewModel.searchSongs(text)
+                debounceJob?.cancel()
+                debounceJob = lifecycleScope.launch {
+                    delay(300L)
+                    viewModel.searchSongs(text)
+                }
                 return true
             }
         })
+    }
+
+    companion object {
+        val PARAM_SHOULD_RETURN_RESULT: String = "PARAM_SHOULD_RETURN_RESULT"
     }
 }

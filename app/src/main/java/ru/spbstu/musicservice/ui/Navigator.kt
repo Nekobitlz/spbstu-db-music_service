@@ -126,9 +126,12 @@ class Navigator @Inject constructor(
         )
     }
 
-    fun toSongsSearch() {
+    fun toSongsSearch(shouldReturnResult: Boolean = true) {
         navigateTo(
             fragment = SongsSearchFragment(),
+            args = Bundle().apply {
+                putBoolean(SongsSearchFragment.PARAM_SHOULD_RETURN_RESULT, shouldReturnResult)
+            },
             addToBackstack = true
         )
     }
