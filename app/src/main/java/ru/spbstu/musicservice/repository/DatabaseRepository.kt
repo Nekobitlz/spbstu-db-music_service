@@ -280,7 +280,7 @@ class DatabaseRepository @Inject constructor(
         return true
     }
 
-    fun searchSongs(query: String, count: Int): List<Song> {
+    fun searchSongs(query: String, count: Int, startPosition: Int = 0): List<Song> {
         val request = """SELECT ${getSongFields()}
          FROM db.song
          LEFT JOIN db.genre ON genre.id = song.genre_id
@@ -289,7 +289,8 @@ class DatabaseRepository @Inject constructor(
          LEFT JOIN db.role ON ar1.role_id = role.id
          WHERE song.name LIKE '%$query%'
          GROUP by song.id
-         LIMIT $count;
+         LIMIT $count
+         OFFSET $startPosition;
          """
         val resultSet = database.select(request) ?: return listOf()
         val list = mutableListOf<Song>()

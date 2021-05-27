@@ -9,6 +9,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -17,6 +19,7 @@ import kotlinx.coroutines.launch
 import ru.spbstu.commons.BaseRecyclerFragment
 import ru.spbstu.commons.adapter.BaseAdapter
 import ru.spbstu.commons.adapter.BaseAdapterItem
+import ru.spbstu.commons.adapter.BasePagedAdapter
 import ru.spbstu.commons.lazyUnsychronized
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.ui.Navigator
@@ -33,12 +36,12 @@ class SongsSearchFragment : BaseRecyclerFragment() {
 
     private val viewModel: SongsSearchViewModel by viewModels()
 
-    override val adapter: BaseAdapter by lazyUnsychronized {
-        createRecyclerAdapter() as BaseAdapter
+    override val adapter: BasePagedAdapter by lazyUnsychronized {
+        createRecyclerAdapter() as BasePagedAdapter
     }
 
     override fun createRecyclerAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        return BaseAdapter()
+        return BasePagedAdapter()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +56,7 @@ class SongsSearchFragment : BaseRecyclerFragment() {
                 is State.Loading -> showLoading()
                 is State.Success -> {
                     showData()
-                    adapter.submitList(it.item as List<BaseAdapterItem<RecyclerView.ViewHolder>>)
+                    adapter.submitList(it.item as PagedList<BaseAdapterItem<RecyclerView.ViewHolder>>)
                 }
                 is State.Error -> showError("По вашему запросу ничего не найдено", null)
             }
@@ -69,7 +72,6 @@ class SongsSearchFragment : BaseRecyclerFragment() {
                 navigator.toSong(it)
             }
         }
-        viewModel.searchSongs("")
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
