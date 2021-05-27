@@ -1,9 +1,7 @@
 package ru.spbstu.musicservice.ui.songs.search
 
-import android.util.Log
 import androidx.paging.DataSource
 import androidx.paging.PositionalDataSource
-import ru.spbstu.musicservice.data.Song
 import ru.spbstu.musicservice.repository.DatabaseRepository
 import ru.spbstu.musicservice.ui.songs.SongClickListener
 import ru.spbstu.musicservice.ui.songs.SongItem
@@ -31,7 +29,6 @@ class SongsSearchDataSource(
         val list = databaseRepository.searchSongs(query, params.requestedLoadSize).map {
             SongItem(it, songClickListener, SongParams(showBtnMore = false, showPosition = false))
         }
-        Log.d("DATASOURCE_TAG", "initial $query ${params.requestedLoadSize} ${list.size}")
         callback.onResult(list, list.size)
     }
 
@@ -39,7 +36,6 @@ class SongsSearchDataSource(
         val list = databaseRepository.searchSongs(query, params.loadSize, params.startPosition).map {
             SongItem(it, songClickListener, SongParams(showBtnMore = false, showPosition = false))
         }
-        Log.d("DATASOURCE_TAG", "range $query ${params.loadSize} ${params.startPosition} ${list.size}")
         callback.onResult(list)
     }
 }

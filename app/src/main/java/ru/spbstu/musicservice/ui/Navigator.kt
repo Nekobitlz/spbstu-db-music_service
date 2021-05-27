@@ -17,6 +17,7 @@ import ru.spbstu.musicservice.ui.cds.CdsFragment
 import ru.spbstu.musicservice.ui.charts.ChartFragment
 import ru.spbstu.musicservice.ui.charts.ChartsFragment
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
+import ru.spbstu.musicservice.ui.feed.artist.ArtistFragment
 import ru.spbstu.musicservice.ui.payments.PaymentsFragment
 import ru.spbstu.musicservice.ui.playlists.PlaylistFragment
 import ru.spbstu.musicservice.ui.playlists.PlaylistFragment.Companion.PARAM_SONG
@@ -141,6 +142,16 @@ class Navigator @Inject constructor(
                 putSerializable(PARAM_SONG, song)
             }
         }.show(activity?.supportFragmentManager ?: return, PARAM_SONG)
+    }
+
+    fun toArtist(artist: Artist) {
+        navigateTo(
+            fragment = ArtistFragment(),
+            args = Bundle().apply {
+                putSerializable(ArtistFragment.PARAM_ARTIST, artist)
+            },
+            addToBackstack = true
+        )
     }
 
     fun navigateTo(

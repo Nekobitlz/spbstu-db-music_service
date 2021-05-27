@@ -177,14 +177,6 @@ class DatabaseRepository @Inject constructor(
             resultSet.getString("genre_name")
         ) else null,
         artist = getArtistParser(resultSet)
-        /*album = Album(
-                    id = resultSet.getString("album.id"),
-                    name = resultSet.getString("album.name"),
-                    length = resultSet.getFloat("album.length"),
-                    releaseDate = resultSet.getString("album.release_date"),
-                    rating = resultSet.getFloat("album.rating"),
-                    playbacksCount  = resultSet.getInt("album.playbacks_count"),
-                ),*/
     )
 
     private fun getArtistParser(resultSet: ResultSet): Artist? {
@@ -263,6 +255,45 @@ class DatabaseRepository @Inject constructor(
         val list = mutableListOf<Song>()
         while (resultSet.next()) {
             val song = getSongParser(resultSet)
+            list.add(song)
+        }
+        return list
+    }
+
+    fun getArtistSongs(artist: Artist, count: Int): List<Song> {
+        val query = """SELECT song.id,
+       song.name  as song_name,
+       song.length,
+       song.release_date,
+       song.rating,
+       song.album_position,
+       song.playbacks_count,
+       song.genre_id,
+       max(genre.name) as genre_name
+       FROM db.song
+       LEFT JOIN db.genre ON genre.id = song.genre_id
+       LEFT JOIN db.song_artist ON song_artist.song_id = song.id
+       WHERE song_artist.artist_id = '${artist.id}'
+       GROUP BY song.id
+       LIMIT $count;
+         """
+        val resultSet = database.select(query) ?: return listOf()
+        val list = mutableListOf<Song>()
+        while (resultSet.next()) {
+            val song =  Song(
+                id = resultSet.getString("id"),
+                name = resultSet.getString("song_name"),
+                length = resultSet.getFloat("length"),
+                releaseDate = resultSet.getString("release_date"),
+                rating = resultSet.getFloat("rating"),
+                albumPosition = resultSet.getInt("album_position"),
+                playbacksCount = resultSet.getInt("playbacks_count"),
+                genre = if (resultSet.getString("genre_id") != null) Genre(
+                    resultSet.getString("genre_id"),
+                    resultSet.getString("genre_name")
+                ) else null,
+                artist = artist
+            )
             list.add(song)
         }
         return list

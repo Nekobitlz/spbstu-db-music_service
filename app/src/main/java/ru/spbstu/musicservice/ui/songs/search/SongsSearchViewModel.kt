@@ -12,12 +12,11 @@ import ru.spbstu.musicservice.repository.DatabaseRepository
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.songs.SongClickListener
 import ru.spbstu.musicservice.ui.songs.SongItem
-import ru.spbstu.musicservice.ui.songs.SongParams
 import javax.inject.Inject
 
 @HiltViewModel
 class SongsSearchViewModel @Inject constructor(
-    private val databaseRepository: DatabaseRepository,
+    databaseRepository: DatabaseRepository,
 ) : ViewModel() {
 
     private val _items = MediatorLiveData<State<PagedList<SongItem>>>()

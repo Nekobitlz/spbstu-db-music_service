@@ -32,10 +32,10 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/bottom_gradient"
-            app:layout_constraintTop_toTopOf="@id/image"
             app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintEnd_toEndOf="@id/image"
-            app:layout_constraintStart_toStartOf="@id/image" />
+            app:layout_constraintStart_toStartOf="@id/image"
+            app:layout_constraintTop_toTopOf="@id/image" />
 
         <TextView
             android:id="@+id/tv_type"
@@ -61,26 +61,17 @@
             app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image" />
 
-        <TextView
-            android:id="@+id/tv_title"
-            style="@style/Text.FeedTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/song_info"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image" />
-
         <LinearLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="20dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+            app:layout_constraintTop_toBottomOf="@id/image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

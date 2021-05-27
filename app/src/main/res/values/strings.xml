@@ -59,4 +59,5 @@
     <string name="song_info_genre">Жанр:</string>
     <string name="song_info_playbacks">Количество прослушиваний:</string>
     <string name="song_info_rating">Рейтинг:</string>
+    <string name="artist">Исполнитель</string>
 </resources>
