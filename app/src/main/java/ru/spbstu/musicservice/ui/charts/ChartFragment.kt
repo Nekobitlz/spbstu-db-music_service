@@ -8,12 +8,17 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.Chart
+import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
 import ru.spbstu.musicservice.ui.songs.FragmentWithSongs
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChartFragment : FragmentWithSongs() {
+
+    @Inject
+    lateinit var navigator: Navigator
 
     private val viewModel: ChartViewModel by viewModels()
     private lateinit var chart: Chart
@@ -45,6 +50,9 @@ class ChartFragment : FragmentWithSongs() {
                 }
                 is State.Error -> showError()
             }
+        }
+        viewModel.songEvent.observe(viewLifecycleOwner) {
+            navigator.toSong(it)
         }
     }
 

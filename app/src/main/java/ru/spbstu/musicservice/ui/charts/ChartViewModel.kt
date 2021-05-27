@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.spbstu.commons.SingleLiveData
 import ru.spbstu.musicservice.data.Cd
 import ru.spbstu.musicservice.data.Chart
 import ru.spbstu.musicservice.data.Song
@@ -27,6 +28,10 @@ class ChartViewModel @Inject constructor(
     private val _items = MutableLiveData<State<List<SongItem>>>()
     val items: LiveData<State<List<SongItem>>>
         get() = _items
+
+    private val _songEvent = SingleLiveData<Song>()
+    val songEvent: LiveData<Song>
+        get() = _songEvent
 
     fun loadChart(chart: Chart) {
         viewModelScope.launch {
@@ -58,6 +63,6 @@ class ChartViewModel @Inject constructor(
     }
 
     override fun onSongClick(song: Song) {
-        TODO("Not yet implemented")
+        _songEvent.postValue(song)
     }
 }

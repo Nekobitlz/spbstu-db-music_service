@@ -9,7 +9,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -20,12 +19,17 @@ import ru.spbstu.commons.adapter.BaseAdapter
 import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.commons.lazyUnsychronized
 import ru.spbstu.musicservice.R
+import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.playlists.PlaylistFragment.Companion.PARAM_SEARCH_REQUEST
 import ru.spbstu.musicservice.ui.playlists.PlaylistFragment.Companion.PARAM_SONG
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SongsSearchFragment : BaseRecyclerFragment() {
+
+    @Inject
+    lateinit var navigator: Navigator
 
     private val viewModel: SongsSearchViewModel by viewModels()
 
@@ -62,7 +66,7 @@ class SongsSearchFragment : BaseRecyclerFragment() {
                 )
                 activity?.onBackPressed()
             } else {
-
+                navigator.toSong(it)
             }
         }
         viewModel.searchSongs("")
@@ -104,6 +108,6 @@ class SongsSearchFragment : BaseRecyclerFragment() {
     }
 
     companion object {
-        val PARAM_SHOULD_RETURN_RESULT: String = "PARAM_SHOULD_RETURN_RESULT"
+        const val PARAM_SHOULD_RETURN_RESULT: String = "PARAM_SHOULD_RETURN_RESULT"
     }
 }

@@ -8,12 +8,17 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.spbstu.commons.adapter.BaseAdapterItem
 import ru.spbstu.musicservice.R
 import ru.spbstu.musicservice.data.Cd
+import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment
 import ru.spbstu.musicservice.ui.songs.FragmentWithSongs
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CdFragment : FragmentWithSongs() {
+
+    @Inject
+    lateinit var navigator: Navigator
 
     private val viewModel: CdViewModel by viewModels()
     private lateinit var cd: Cd
@@ -27,7 +32,6 @@ class CdFragment : FragmentWithSongs() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cd = arguments?.getSerializable(MusicFeedFragment.PARAM_CD) as Cd
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,6 +50,7 @@ class CdFragment : FragmentWithSongs() {
                 is State.Error -> showError()
             }
         }
+        viewModel.songEvent.observe(viewLifecycleOwner, navigator::toSong)
     }
 
     override fun onRefresh() {

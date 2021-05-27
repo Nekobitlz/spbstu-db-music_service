@@ -2,9 +2,6 @@ package ru.spbstu.musicservice.ui.playlists
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +15,6 @@ import ru.spbstu.musicservice.ui.Navigator
 import ru.spbstu.musicservice.ui.State
 import ru.spbstu.musicservice.ui.feed.MusicFeedFragment.Companion.PARAM_PLAYLIST
 import ru.spbstu.musicservice.ui.songs.FragmentWithSongs
-import ru.spbstu.musicservice.ui.songs.SongItem
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -85,9 +81,7 @@ class PlaylistFragment : FragmentWithSongs() {
                 viewModel.onSongSelected(playlist, bundle.getSerializable(PARAM_SONG) as Song)
             }
         }
-        viewModel.songEvent.observe(viewLifecycleOwner) {
-            navigator.toSong(it)
-        }
+        viewModel.songEvent.observe(viewLifecycleOwner, navigator::toSong)
     }
 
     override fun onRefresh() {
