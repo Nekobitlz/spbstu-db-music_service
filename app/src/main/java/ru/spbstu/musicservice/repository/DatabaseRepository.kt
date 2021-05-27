@@ -318,7 +318,7 @@ class DatabaseRepository @Inject constructor(
          LEFT JOIN db.song_artist ON song_artist.song_id = song.id
          LEFT JOIN db.artist as ar1 ON song_artist.artist_id = ar1.id
          LEFT JOIN db.role ON ar1.role_id = role.id
-         WHERE song.name LIKE '%$query%'
+         WHERE song.name LIKE '%$query%' OR ar1.name LIKE '%$query%'
          GROUP by song.id
          LIMIT $count
          OFFSET $startPosition;

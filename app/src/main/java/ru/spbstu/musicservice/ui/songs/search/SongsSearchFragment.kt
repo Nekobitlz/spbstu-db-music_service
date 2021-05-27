@@ -109,6 +109,10 @@ class SongsSearchFragment : BaseRecyclerFragment() {
         })
     }
 
+    override fun onRefresh() {
+        recyclerBinding.swipeRefresh.isRefreshing = false
+    }
+
     companion object {
         const val PARAM_SHOULD_RETURN_RESULT: String = "PARAM_SHOULD_RETURN_RESULT"
     }
