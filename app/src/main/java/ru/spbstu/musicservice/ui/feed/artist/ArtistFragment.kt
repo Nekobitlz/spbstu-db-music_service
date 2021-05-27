@@ -46,7 +46,7 @@ class ArtistFragment : Fragment(R.layout.fragment_artist) {
     private lateinit var artist: Artist
 
     fun getName(): String = artist.name
-    fun getType(): String = artist.role?.name ?: getString(R.string.artist)
+    fun getType(): String = getString(R.string.artist)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
